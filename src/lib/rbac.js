@@ -99,3 +99,49 @@ export function getRoleLabel(role) {
 export function getRoleColor(role) {
   return ROLE_COLORS[role] ?? "bg-muted text-muted-foreground border-border";
 }
+
+/**
+ * NGO Data Isolation — filter a list of entity records so a user only sees
+ * records belonging to their NGO (ngo_id or ngo_name match).
+ *
+ * - platform_admin sees everything.
+ * - ngo_admin / social_researcher / marketer see only their NGO's records.
+ *
+ * @param {object} user    The authenticated user object (must have role + ngo_id/ngo_name)
+ * @param {Array}  records Array of entity records
+ * @returns {Array} Filtered records
+ */
+export function filterByNGO(user, records) {
+  if (!user) return [];
+  if (user.role === ROLES.PLATFORM_ADMIN) return records;
+
+  // Non-admin users are scoped to their own NGO
+  const userNgoId   = user.ngo_id;
+  const userNgoName = user.ngo_name;
+
+  return records.filter(r => {
+    if (userNgoId && r.ngo_id)     return r.ngo_id === userNgoId;
+    if (userNgoName && r.ngo_name) return r.ngo_name === userNgoName;
+    // If user has no NGO affiliation yet, show nothing (safest default)
+    return false;
+  });
+}
+
+/**
+ * Enforce that a create/update operation only targets the user's own NGO.
+ * Throws a descriptive error if the user attempts cross-NGO mutation.
+ *
+ * @param {object} user
+ * @param {object} data  The data being written
+ */
+export function assertNGOScope(user, data) {
+  if (!user) throw new Error("المستخدم غير مصادق عليه");
+  if (user.role === ROLES.PLATFORM_ADMIN) return; // No restriction
+
+  if (data.ngo_id && user.ngo_id && data.ngo_id !== user.ngo_id) {
+    throw new Error("غير مسموح: لا يمكنك تعديل بيانات منظمة أخرى");
+  }
+  if (data.ngo_name && user.ngo_name && data.ngo_name !== user.ngo_name) {
+    throw new Error("غير مسموح: لا يمكنك تعديل بيانات منظمة أخرى");
+  }
+}

@@ -6,12 +6,14 @@ import UnauthorizedBanner from "@/components/auth/UnauthorizedBanner";
 import RolesPermissionsTab from "@/components/settings/RolesPermissionsTab";
 import ActivityMonitorTab from "@/components/settings/ActivityMonitorTab";
 import PlatformConfigTab from "@/components/settings/PlatformConfigTab";
-import { Shield, BarChart2, Settings, ShieldCheck } from "lucide-react";
+import SystemHealthTab from "@/components/settings/SystemHealthTab";
+import { Shield, BarChart2, Settings, ShieldCheck, Activity } from "lucide-react";
 
 const TABS = [
-  { id: "roles",    label: "الأدوار والصلاحيات",    icon: Shield,    desc: "إدارة المستخدمين وتعيين الأدوار" },
-  { id: "monitor",  label: "مراقبة النشاط",           icon: BarChart2, desc: "تتبع الأداء والأنشطة" },
-  { id: "config",   label: "إعدادات المنصة",          icon: Settings,  desc: "تكوين إعدادات المنصة" },
+  { id: "roles",    label: "الأدوار والصلاحيات",    icon: Shield,      desc: "إدارة المستخدمين وتعيين الأدوار" },
+  { id: "monitor",  label: "مراقبة النشاط",           icon: BarChart2,   desc: "تتبع الأداء والأنشطة" },
+  { id: "health",   label: "صحة النظام",              icon: Activity,    desc: "فحص الاتصال بقاعدة البيانات والتخزين" },
+  { id: "config",   label: "إعدادات المنصة",          icon: Settings,    desc: "تكوين إعدادات المنصة" },
 ];
 
 export default function PlatformSettings() {
@@ -79,6 +81,7 @@ export default function PlatformSettings() {
       >
         {activeTab === "roles"   && <RolesPermissionsTab />}
         {activeTab === "monitor" && <ActivityMonitorTab />}
+        {activeTab === "health"  && <SystemHealthTab />}
         {activeTab === "config"  && <PlatformConfigTab />}
       </motion.div>
     </div>

@@ -1,5 +1,8 @@
 import { useState, useMemo } from "react";
 import { Users, Search, Download, Upload, LayoutGrid, List, Package } from "lucide-react";
+import PaginationBar from "@/components/shared/PaginationBar";
+import { paginate, DEFAULT_PAGE_SIZE } from "@/lib/pagination";
+import { ErrorLogger } from "@/lib/errorLogger";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { motion, AnimatePresence } from "framer-motion";
@@ -32,6 +35,8 @@ export default function Beneficiaries() {
   const [importOpen, setImportOpen] = useState(false);
   const [docsTarget, setDocsTarget] = useState(null);
   const [kitOpen, setKitOpen]     = useState(false);
+  const [page, setPage]           = useState(1);
+  const [pageSize, setPageSize]   = useState(DEFAULT_PAGE_SIZE);
 
   // ── Data ──────────────────────────────────────────────────────────────────
   const { data: beneficiaries = [], isLoading } = useQuery({
@@ -115,6 +120,15 @@ export default function Beneficiaries() {
     return list;
   }, [beneficiaries, search, filters]);
 
+  // ── Pagination ────────────────────────────────────────────────────────────
+  const { items: paginatedItems, totalPages, totalItems } = useMemo(
+    () => paginate(filtered, page, pageSize),
+    [filtered, page, pageSize]
+  );
+
+  // Reset to page 1 when filters change
+  // (handled by resetting page in filter handlers below)
+
   // ── Summary counts ────────────────────────────────────────────────────────
   const urgentCount = beneficiaries.filter(b => b.priority === "عاجل" && b.status !== "archived").length;
   const activeCount = beneficiaries.filter(b => b.status === "active").length;
@@ -167,7 +181,7 @@ export default function Beneficiaries() {
           <div className="relative flex-1 max-w-sm">
             <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input placeholder="البحث بالاسم أو الهوية أو المدينة…" className="pr-10"
-              value={search} onChange={e => setSearch(e.target.value)} />
+              value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} />
           </div>
           {/* View toggle */}
           <div className="flex items-center border border-border rounded-lg overflow-hidden flex-shrink-0">
@@ -181,7 +195,9 @@ export default function Beneficiaries() {
             </button>
           </div>
         </div>
-        <BeneficiaryFilters filters={filters} onFilterChange={setFilters} onReset={() => setFilters(DEFAULT_FILTERS)} />
+        <BeneficiaryFilters filters={filters}
+          onFilterChange={(f) => { setFilters(f); setPage(1); }}
+          onReset={() => { setFilters(DEFAULT_FILTERS); setPage(1); }} />
       </div>
 
       {/* Results count */}
@@ -211,29 +227,39 @@ export default function Beneficiaries() {
           />
         </div>
       ) : (
-        <AnimatePresence mode="popLayout">
-          <div className={viewMode === "grid"
-            ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
-            : "flex flex-col gap-3"}>
-            {filtered.map((b, i) => (
-              <BeneficiaryCard
-                key={b.id} beneficiary={b} index={i}
-                onEdit={(b) => { setEditingB(b); setFormOpen(true); }}
-                onArchive={handleArchive}
-                onDelete={handleDelete}
-                onViewDocs={(b) => setDocsTarget(b)}
-              />
-            ))}
-          </div>
-        </AnimatePresence>
+        <>
+          <AnimatePresence mode="popLayout">
+            <div className={viewMode === "grid"
+              ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+              : "flex flex-col gap-3"}>
+              {paginatedItems.map((b, i) => (
+                <BeneficiaryCard
+                  key={b.id} beneficiary={b} index={i}
+                  onEdit={(b) => { setEditingB(b); setFormOpen(true); }}
+                  onArchive={handleArchive}
+                  onDelete={handleDelete}
+                  onViewDocs={(b) => setDocsTarget(b)}
+                />
+              ))}
+            </div>
+          </AnimatePresence>
+          <PaginationBar
+            currentPage={page}
+            totalPages={totalPages}
+            totalItems={totalItems}
+            pageSize={pageSize}
+            onPageChange={setPage}
+            onPageSizeChange={(s) => { setPageSize(s); setPage(1); }}
+          />
+        </>
       )}
 
       {/* Dialogs */}
       <BeneficiaryFormDialog open={formOpen} onOpenChange={v => { setFormOpen(v); if (!v) setEditingB(null); }}
         beneficiary={editingB} onSave={handleSave} />
 
-      <ImportDialog open={importOpen} onOpenChange={setImportOpen} entityLabel="المستفيدين"
-        onImport={(file) => console.log("Import:", file.name)} />
+      <ImportDialog open={importOpen} onOpenChange={setImportOpen}
+        entityLabel="المستفيدين" entityName="Beneficiary" />
 
       <DocumentsDialog open={!!docsTarget} onOpenChange={v => { if (!v) setDocsTarget(null); }}
         beneficiary={docsTarget} onUpdate={handleDocUpdate} />
