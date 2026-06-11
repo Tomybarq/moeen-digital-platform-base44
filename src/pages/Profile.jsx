@@ -1,187 +1,127 @@
 import { useState } from "react";
-import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { UserCircle, Mail, Phone, Building2, Save, Loader2, Shield, LogOut, KeyRound, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
-import RoleBadge from "@/components/auth/RoleBadge";
-import ChangePasswordDialog from "@/components/auth/ChangePasswordDialog";
+import { cn } from "@/lib/utils";
+import { getRoleLabel } from "@/lib/rbac";
+import { MapPin, Building2, User, Shield, Settings, ShieldCheck, Search, Megaphone } from "lucide-react";
+import ProfileInfoTab from "@/components/profile/ProfileInfoTab";
+import ProfileSecurityTab from "@/components/profile/ProfileSecurityTab";
+import ProfilePrefsTab from "@/components/profile/ProfilePrefsTab";
+
+const ROLE_BANNERS = {
+  platform_admin:    { from: "#7c3aed", to: "#a78bfa", icon: ShieldCheck },
+  ngo_admin:         { from: "#1d4ed8", to: "#60a5fa", icon: Building2  },
+  social_researcher: { from: "#059669", to: "#34d399", icon: Search     },
+  marketer:          { from: "#d97706", to: "#fbbf24", icon: Megaphone  },
+};
+
+const ROLE_DESCRIPTIONS = {
+  platform_admin:    "صلاحيات كاملة على جميع أقسام المنصة",
+  ngo_admin:         "إدارة منظمة غير ربحية ومستفيديها",
+  social_researcher: "البحث والمتابعة الميدانية للمستفيدين",
+  marketer:          "إدارة الحملات التسويقية والترويجية",
+};
+
+const TABS = [
+  { id: "info",     label: "المعلومات الشخصية", icon: User    },
+  { id: "security", label: "الأمان",            icon: Shield  },
+  { id: "prefs",    label: "التفضيلات",         icon: Settings },
+];
 
 export default function Profile() {
-  const { user, logout } = useAuth();
-  const [fullName, setFullName]       = useState(user?.full_name || "");
-  const [phone, setPhone]             = useState(user?.phone || "");
-  const [organization, setOrganization] = useState(user?.organization || "");
-  const [saving, setSaving]           = useState(false);
-  const [saved, setSaved]             = useState(false);
-  const [showChangePwd, setShowChangePwd] = useState(false);
+  const { user } = useAuth();
+  const [activeTab, setActiveTab] = useState("info");
 
-  const handleSave = async (e) => {
-    e.preventDefault();
-    setSaving(true);
-    setSaved(false);
-    try {
-      await base44.auth.updateMe({ phone, organization });
-      setSaved(true);
-      setTimeout(() => setSaved(false), 3000);
-    } finally {
-      setSaving(false);
-    }
-  };
+  const role   = user?.role || "platform_admin";
+  const banner = ROLE_BANNERS[role] || ROLE_BANNERS.platform_admin;
+  const BIcon  = banner.icon;
+
+  const initials = user?.full_name?.split(" ").slice(0, 2).map(w => w[0]).join("") || "م";
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-3xl mx-auto space-y-6" dir="rtl">
+
+      {/* ── Page title ── */}
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
         <h2 className="text-xl font-bold text-foreground">الملف الشخصي</h2>
-        <p className="text-sm text-muted-foreground mt-1">عرض وتحديث بيانات حسابك الشخصي</p>
+        <p className="text-sm text-muted-foreground mt-1">منصة مُعين الرقمية — عرض وإدارة بيانات حسابك</p>
       </motion.div>
 
-      {/* Identity card */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
-        <Card className="border-border">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-5">
-              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
-                <UserCircle className="w-8 h-8 text-primary" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-lg font-bold text-foreground truncate">
-                  {user?.full_name || "—"}
-                </p>
-                <p className="text-sm text-muted-foreground truncate" dir="ltr">
-                  {user?.email}
-                </p>
-                <div className="mt-2">
-                  {user?.role && <RoleBadge role={user.role} size="sm" />}
-                </div>
+      {/* ── Hero Banner ── */}
+      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04 }}>
+        <div className="relative rounded-2xl overflow-hidden"
+          style={{ background: `linear-gradient(135deg, ${banner.from}, ${banner.to})` }}>
+          {/* subtle dot grid */}
+          <div className="absolute inset-0 opacity-[0.08]"
+            style={{
+              backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)",
+              backgroundSize: "24px 24px",
+            }} />
+          <div className="relative p-6 flex flex-col sm:flex-row items-start sm:items-center gap-5">
+            {/* Avatar */}
+            <div className="w-20 h-20 rounded-2xl bg-white/25 backdrop-blur-sm border-2 border-white/30 flex items-center justify-center flex-shrink-0">
+              <span className="text-white font-extrabold text-2xl select-none">{initials}</span>
+            </div>
+
+            {/* User info */}
+            <div className="flex-1 min-w-0 text-white">
+              <p className="text-xl font-bold leading-tight">{user?.full_name || "—"}</p>
+              <p className="text-white/70 text-sm mt-0.5 font-mono" dir="ltr">{user?.email}</p>
+              <div className="flex items-center gap-2 mt-3 flex-wrap">
+                <span className="inline-flex items-center gap-1.5 bg-white/20 border border-white/30 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                  <BIcon className="w-3.5 h-3.5" />
+                  {getRoleLabel(role)}
+                </span>
+                {user?.city && (
+                  <span className="inline-flex items-center gap-1 text-white/75 text-xs">
+                    <MapPin className="w-3 h-3" /> {user.city}
+                  </span>
+                )}
+                {user?.organization && (
+                  <span className="inline-flex items-center gap-1 text-white/75 text-xs">
+                    <Building2 className="w-3 h-3" /> {user.organization}
+                  </span>
+                )}
               </div>
             </div>
-          </CardContent>
-        </Card>
+
+            {/* Role description — desktop */}
+            <div className="hidden sm:flex flex-col items-end gap-1 text-white/85 text-xs max-w-52 bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-right">
+              <span className="font-semibold text-white">{getRoleLabel(role)}</span>
+              <span className="leading-relaxed">{ROLE_DESCRIPTIONS[role]}</span>
+            </div>
+          </div>
+        </div>
       </motion.div>
 
-      {/* Edit form */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-        <Card className="border-border">
-          <CardHeader>
-            <CardTitle className="text-base">المعلومات الشخصية</CardTitle>
-            <CardDescription>تحديث بيانات ملفك الشخصي</CardDescription>
-          </CardHeader>
-          <Separator />
-          <CardContent className="p-6">
-            <form onSubmit={handleSave} className="space-y-4">
-              <div className="space-y-1.5">
-                <Label htmlFor="fname">الاسم الكامل</Label>
-                <div className="relative">
-                  <UserCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-                  <Input
-                    id="fname"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    placeholder="الاسم الكامل"
-                    className="pr-10 h-11 bg-muted/40 cursor-not-allowed"
-                    disabled
-                  />
-                </div>
-                <p className="text-xs text-muted-foreground">الاسم لا يمكن تغييره من هنا</p>
-              </div>
-
-              <div className="space-y-1.5">
-                <Label htmlFor="email-view">البريد الإلكتروني</Label>
-                <div className="relative">
-                  <Mail className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-                  <Input
-                    id="email-view"
-                    value={user?.email || ""}
-                    className="pr-10 h-11 bg-muted/40 text-left cursor-not-allowed"
-                    dir="ltr"
-                    disabled
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <Label htmlFor="phone">رقم الهاتف</Label>
-                  <div className="relative">
-                    <Phone className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-                    <Input
-                      id="phone"
-                      type="tel"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="+966 5x xxx xxxx"
-                      className="pr-10 h-11"
-                    />
-                  </div>
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="org">المنظمة</Label>
-                  <div className="relative">
-                    <Building2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-                    <Input
-                      id="org"
-                      value={organization}
-                      onChange={(e) => setOrganization(e.target.value)}
-                      placeholder="اسم المنظمة"
-                      className="pr-10 h-11"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 pt-2">
-                <Button type="submit" disabled={saving} className="cursor-pointer gap-2">
-                  {saving
-                    ? <><Loader2 className="w-4 h-4 animate-spin" />جاري الحفظ…</>
-                    : saved
-                    ? <><CheckCircle2 className="w-4 h-4" />تم الحفظ</>
-                    : <><Save className="w-4 h-4" />حفظ التغييرات</>
-                  }
-                </Button>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
+      {/* ── Tab bar ── */}
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.08 }}>
+        <div className="flex border border-border rounded-xl overflow-hidden bg-muted/20">
+          {TABS.map(tab => {
+            const TIcon = tab.icon;
+            const active = activeTab === tab.id;
+            return (
+              <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+                className={cn(
+                  "flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-all cursor-pointer",
+                  active
+                    ? "bg-card shadow-sm text-primary border-b-2 border-primary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
+                )}>
+                <TIcon className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">{tab.label}</span>
+              </button>
+            );
+          })}
+        </div>
       </motion.div>
 
-      {/* Security */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-        <Card className="border-border">
-          <CardHeader>
-            <CardTitle className="text-base flex items-center gap-2">
-              <Shield className="w-4 h-4 text-primary" />
-              الأمان
-            </CardTitle>
-            <CardDescription>إدارة كلمة المرور وأمان الحساب</CardDescription>
-          </CardHeader>
-          <Separator />
-          <CardContent className="p-6 space-y-3">
-            <Button
-              variant="outline"
-              className="w-full h-11 cursor-pointer justify-start gap-3"
-              onClick={() => setShowChangePwd(true)}
-            >
-              <KeyRound className="w-4 h-4 text-muted-foreground" />
-              تغيير كلمة المرور
-            </Button>
-            <Button
-              variant="outline"
-              className="w-full h-11 cursor-pointer justify-start gap-3 text-destructive border-destructive/30 hover:bg-destructive/5 hover:text-destructive"
-              onClick={() => logout()}
-            >
-              <LogOut className="w-4 h-4" />
-              تسجيل الخروج
-            </Button>
-          </CardContent>
-        </Card>
+      {/* ── Tab content ── */}
+      <motion.div key={activeTab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
+        {activeTab === "info"     && <ProfileInfoTab user={user} />}
+        {activeTab === "security" && <ProfileSecurityTab />}
+        {activeTab === "prefs"    && <ProfilePrefsTab />}
       </motion.div>
-
-      <ChangePasswordDialog open={showChangePwd} onClose={() => setShowChangePwd(false)} />
     </div>
   );
 }
