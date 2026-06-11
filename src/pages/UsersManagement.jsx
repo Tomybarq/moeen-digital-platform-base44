@@ -34,7 +34,7 @@ export default function UsersManagement() {
   const [roleFilter, setRoleFilter]     = useState("all");
   const [inviteOpen, setInviteOpen]     = useState(false);
   const [inviteEmail, setInviteEmail]   = useState("");
-  const [inviteRole, setInviteRole]     = useState(ROLES.SOCIAL_RESEARCHER);
+  const [inviteRole, setInviteRole]     = useState(ROLES.RESEARCHER);
   const [inviting, setInviting]         = useState(false);
   const [inviteError, setInviteError]   = useState("");
   const [inviteDone, setInviteDone]     = useState(false);
@@ -180,7 +180,7 @@ export default function UsersManagement() {
                       {u.role ? <RoleBadge role={u.role} size="sm" /> : <span className="text-muted-foreground text-xs">—</span>}
                     </TableCell>
                     <TableCell>
-                      <span className="text-sm text-muted-foreground">{u.organization || "—"}</span>
+                      <span className="text-sm text-muted-foreground">{u.ngo_name || "—"}</span>
                     </TableCell>
                     <TableCell>
                       <Badge

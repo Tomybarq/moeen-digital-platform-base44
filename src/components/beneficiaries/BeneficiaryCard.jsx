@@ -10,6 +10,8 @@ import {
   AlertDialogTitle, AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/lib/AuthContext";
+import { hasPermission } from "@/lib/rbac";
 
 const CASE_COLORS = {
   "مادي":     "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
@@ -27,9 +29,14 @@ const STATUS_MAP = {
 
 export default function BeneficiaryCard({ beneficiary: b, index = 0, onEdit, onArchive, onDelete, onViewDocs }) {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const initials = b.full_name?.split(" ").slice(0, 2).map(w => w[0]).join("") || "؟";
   const status = STATUS_MAP[b.status] || STATUS_MAP.active;
   const docsCount = b.documents?.length || 0;
+
+  const canEdit    = hasPermission(user, "beneficiaries:edit");
+  const canArchive = hasPermission(user, "beneficiaries:archive");
+  const canDelete  = hasPermission(user, "beneficiaries:delete");
 
   return (
     <motion.div
@@ -89,16 +96,19 @@ export default function BeneficiaryCard({ beneficiary: b, index = 0, onEdit, onA
       )}
 
       {/* Footer actions */}
-      <div className="flex items-center gap-1 pt-1 border-t border-border">
+      <div className="flex items-center gap-1 pt-1 border-t border-border flex-wrap">
         <Button variant="ghost" size="sm"
           onClick={() => navigate(`/beneficiaries/detail?id=${b.id}`)}
           className="flex-1 text-xs h-7 gap-1 cursor-pointer text-primary">
           <Eye className="w-3 h-3" /> تفاصيل
         </Button>
-        <Button variant="ghost" size="sm" onClick={() => onEdit(b)}
-          className="flex-1 text-xs h-7 gap-1 cursor-pointer">
-          <Pencil className="w-3 h-3" /> تعديل
-        </Button>
+
+        {canEdit && (
+          <Button variant="ghost" size="sm" onClick={() => onEdit(b)}
+            className="flex-1 text-xs h-7 gap-1 cursor-pointer">
+            <Pencil className="w-3 h-3" /> تعديل
+          </Button>
+        )}
 
         {docsCount > 0 && (
           <Button variant="ghost" size="sm" onClick={() => onViewDocs(b)}
@@ -107,34 +117,42 @@ export default function BeneficiaryCard({ beneficiary: b, index = 0, onEdit, onA
           </Button>
         )}
 
-        <Button variant="ghost" size="sm" onClick={() => onArchive(b)}
-          className="flex-1 text-xs h-7 gap-1 cursor-pointer text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20">
-          <Archive className="w-3 h-3" /> {b.status === "archived" ? "تفعيل" : "أرشفة"}
-        </Button>
+        {canArchive && (
+          <Button variant="ghost" size="sm" onClick={() => onArchive(b)}
+            className="flex-1 text-xs h-7 gap-1 cursor-pointer text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20">
+            <Archive className="w-3 h-3" /> {b.status === "archived" ? "تفعيل" : "أرشفة"}
+          </Button>
+        )}
 
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button variant="ghost" size="sm"
-              className="flex-1 text-xs h-7 gap-1 cursor-pointer text-destructive hover:bg-destructive/10">
-              <Trash2 className="w-3 h-3" /> حذف
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent dir="rtl">
-            <AlertDialogHeader>
-              <AlertDialogTitle>تأكيد الحذف</AlertDialogTitle>
-              <AlertDialogDescription>
-                هل أنت متأكد من حذف ملف المستفيد <strong>{b.full_name}</strong>؟ لا يمكن التراجع عن هذا الإجراء.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter className="flex-row-reverse gap-2">
-              <AlertDialogCancel>إلغاء</AlertDialogCancel>
-              <AlertDialogAction onClick={() => onDelete(b)}
-                className="bg-destructive hover:bg-destructive/90 text-destructive-foreground cursor-pointer">
-                تأكيد الحذف
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        {canDelete && (
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="ghost" size="sm"
+                className="flex-1 text-xs h-7 gap-1 cursor-pointer text-destructive hover:bg-destructive/10">
+                <Trash2 className="w-3 h-3" /> حذف
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent dir="rtl">
+              <AlertDialogHeader>
+                <AlertDialogTitle>تأكيد الحذف</AlertDialogTitle>
+                <AlertDialogDescription>
+                  هل أنت متأكد من حذف ملف المستفيد <strong>{b.full_name}</strong>؟ لا يمكن التراجع عن هذا الإجراء.
+                  <br />
+                  <span className="text-xs text-rose-600 font-medium mt-1 block">
+                    ⚠️ هذا الإجراء مقتصر على مسؤول حماية البيانات (PDO) وفق متطلبات الامتثال.
+                  </span>
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className="flex-row-reverse gap-2">
+                <AlertDialogCancel>إلغاء</AlertDialogCancel>
+                <AlertDialogAction onClick={() => onDelete(b)}
+                  className="bg-destructive hover:bg-destructive/90 text-destructive-foreground cursor-pointer">
+                  تأكيد الحذف
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
       </div>
     </motion.div>
   );

@@ -8,7 +8,7 @@ import NGOsWidget from "@/components/dashboard/NGOsWidget";
 import MarketerActivityWidget from "@/components/dashboard/MarketerActivityWidget";
 import RecentActivityFeed from "@/components/dashboard/RecentActivityFeed";
 import { useAuth } from "@/lib/AuthContext";
-import { getRoleLabel } from "@/lib/rbac";
+import { getRoleLabel, hasPermission, ROLES, filterByNGO } from "@/lib/rbac";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 
@@ -27,7 +27,7 @@ export default function Dashboard() {
     staleTime: 60_000,
   });
 
-  const { data: beneficiaries = [] } = useQuery({
+  const { data: rawBeneficiaries = [] } = useQuery({
     queryKey: ["dashboard-beneficiaries"],
     queryFn: () => base44.entities.Beneficiary.list("-created_date", 500),
     staleTime: 60_000,
@@ -38,6 +38,12 @@ export default function Dashboard() {
     queryFn: () => base44.entities.Marketer.filter({ status: "active" }, "-created_date", 200),
     staleTime: 60_000,
   });
+
+  // Apply NGO/user-level isolation — same logic as Beneficiaries page
+  const beneficiaries = useMemo(
+    () => filterByNGO(user, rawBeneficiaries),
+    [user, rawBeneficiaries]
+  );
 
   // Compute aggregated stats client-side (materialized-view equivalent)
   const stats = useMemo(() => {
@@ -59,6 +65,21 @@ export default function Dashboard() {
     };
   }, [ngos, beneficiaries, marketers]);
 
+
+  const isAdmin       = user?.role === ROLES.PLATFORM_ADMIN;
+  const isNgoManager  = user?.role === ROLES.NGO_MANAGER;
+  const isResearcher  = user?.role === ROLES.RESEARCHER;
+  const isMarketer    = user?.role === ROLES.MARKETER;
+  const isPdo         = user?.role === ROLES.PDO;
+
+  const dashSubtitle = {
+    platform_admin: "لوحة التحكم الشاملة — نظرة كاملة على المنصة",
+    ngo_manager:    "لوحة مدير المنظمة — مستفيدو منظمتك وتقاريرها",
+    researcher:     "مساحة الباحث الميداني — حالاتك المسجّلة",
+    marketer:       "لوحة التسويق — الحملات والحالات القابلة للمشاركة",
+    pdo:            "لوحة مسؤول حماية البيانات — الامتثال والتدقيق",
+  }[user?.role] || "لوحة التحكم";
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -72,34 +93,73 @@ export default function Dashboard() {
             مرحباً{user?.full_name ? `، ${user.full_name.split(" ")[0]}` : ""} 👋
           </h2>
           {user?.role && (
-            <span className="text-xs px-2.5 py-1 rounded-full bg-primary/10 text-primary font-medium">
+            <span className="text-xs px-2.5 py-1 rounded-full font-medium"
+              style={{ background: "rgba(200,151,42,0.12)", color: "#c8972a" }}>
               {getRoleLabel(user.role)}
             </span>
           )}
+          {user?.ngo_name && !isAdmin && (
+            <span className="text-xs px-2.5 py-1 rounded-full bg-muted text-muted-foreground font-medium">
+              {user.ngo_name}
+            </span>
+          )}
         </div>
-        <p className="text-muted-foreground text-sm">لوحة تحكم مدير المنصة — نظرة شاملة على الأداء</p>
+        <p className="text-muted-foreground text-sm">{dashSubtitle}</p>
       </motion.div>
 
-      {/* Top Stats — live data */}
+      {/* Top Stats — visibility gated by role */}
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="المنظمات النشطة"      value={toArabicNumeral(stats.ngoCount)}        icon={Building2}   trend={null} trendLabel="منظمة مسجّلة" />
-        <StatCard title="الباحثون النشطون"     value={toArabicNumeral(stats.researcherCount)} icon={Search}      trend={null} trendLabel="باحث ميداني" />
-        <StatCard title="المسوّقون النشطون"    value={toArabicNumeral(stats.marketerCount)}   icon={Megaphone}   trend={null} trendLabel="مسوّق مسجّل" />
-        <StatCard title="الحالات العاجلة"      value={toArabicNumeral(stats.urgentCases)}     icon={TrendingUp}  trend={null} trendLabel="بحاجة عاجلة" />
+        {(isAdmin || isNgoManager) && (
+          <StatCard title="المنظمات النشطة" value={toArabicNumeral(stats.ngoCount)} icon={Building2} trend={null} trendLabel="منظمة مسجّلة" />
+        )}
+        {(isAdmin || isNgoManager || isPdo) && (
+          <StatCard title="الباحثون النشطون" value={toArabicNumeral(stats.researcherCount)} icon={Search} trend={null} trendLabel="باحث ميداني" />
+        )}
+        {(isAdmin || isNgoManager || isMarketer) && (
+          <StatCard title="المسوّقون النشطون" value={toArabicNumeral(stats.marketerCount)} icon={Megaphone} trend={null} trendLabel="مسوّق مسجّل" />
+        )}
+        <StatCard title="الحالات العاجلة" value={toArabicNumeral(stats.urgentCases)} icon={TrendingUp} trend={null} trendLabel="بحاجة عاجلة" />
+        {isResearcher && (
+          <StatCard
+            title="حالاتي المسجّلة"
+            value={toArabicNumeral(beneficiaries.filter(b => b.created_by_id === user?.id).length)}
+            icon={ShieldCheck} trend={null} trendLabel="حالة سجّلتها"
+          />
+        )}
       </div>
 
-      {/* Overview chart + activity feed */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <PlatformOverviewChart />
-        <RecentActivityFeed />
-      </div>
+      {/* Overview chart + activity feed — admin/ngo_manager/pdo */}
+      {(isAdmin || isNgoManager || isPdo) && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <PlatformOverviewChart />
+          <RecentActivityFeed />
+        </div>
+      )}
 
-      {/* Three main widgets */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <ResearcherActivityWidget />
-        <NGOsWidget />
-        <MarketerActivityWidget />
-      </div>
+      {/* Researcher: only their own activity feed */}
+      {(isResearcher || isMarketer) && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <RecentActivityFeed />
+          <NGOsWidget />
+        </div>
+      )}
+
+      {/* Three main widgets — admin sees all */}
+      {isAdmin && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <ResearcherActivityWidget />
+          <NGOsWidget />
+          <MarketerActivityWidget />
+        </div>
+      )}
+
+      {/* NGO Manager: researcher + marketer widgets */}
+      {isNgoManager && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <ResearcherActivityWidget />
+          <MarketerActivityWidget />
+        </div>
+      )}
     </div>
   );
 }

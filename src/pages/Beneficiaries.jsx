@@ -6,7 +6,7 @@ import { ErrorLogger } from "@/lib/errorLogger";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
-import { filterByNGO, assertNGOScope } from "@/lib/rbac";
+import { filterByNGO, assertNGOScope, hasPermission } from "@/lib/rbac";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -161,30 +161,38 @@ export default function Beneficiaries() {
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
-          {/* Marketing Kit */}
-          <Button variant="outline" size="sm" onClick={() => setKitOpen(true)}
-            className="cursor-pointer gap-2 text-purple-600 border-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20">
-            <Package className="w-4 h-4" />
-            <span className="hidden sm:inline">الطاقم التسويقي</span>
-          </Button>
-          {/* Export */}
-          <Button variant="outline" size="sm" onClick={handleExport} disabled={filtered.length === 0}
-            className="cursor-pointer gap-2 text-emerald-600 border-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/20">
-            <Download className="w-4 h-4" />
-            <span className="hidden sm:inline">تصدير البيانات</span>
-          </Button>
-          {/* Import */}
-          <Button variant="outline" size="sm" onClick={() => setImportOpen(true)}
-            className="cursor-pointer gap-2">
-            <Upload className="w-4 h-4" />
-            <span className="hidden sm:inline">استيراد Excel</span>
-          </Button>
-          {/* Add */}
-          <Button size="sm" onClick={() => { setEditingB(null); setFormOpen(true); }}
-            className="cursor-pointer gap-2">
-            <Users className="w-4 h-4" />
-            <span className="hidden sm:inline">تسجيل مستفيد</span>
-          </Button>
+          {/* Marketing Kit — marketer + admin + ngo_manager */}
+          {hasPermission(user, "marketing:view") && (
+            <Button variant="outline" size="sm" onClick={() => setKitOpen(true)}
+              className="cursor-pointer gap-2 text-purple-600 border-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20">
+              <Package className="w-4 h-4" />
+              <span className="hidden sm:inline">الطاقم التسويقي</span>
+            </Button>
+          )}
+          {/* Export — admin + ngo_manager + pdo */}
+          {hasPermission(user, "beneficiaries:export") && (
+            <Button variant="outline" size="sm" onClick={handleExport} disabled={filtered.length === 0}
+              className="cursor-pointer gap-2 text-emerald-600 border-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/20">
+              <Download className="w-4 h-4" />
+              <span className="hidden sm:inline">تصدير البيانات</span>
+            </Button>
+          )}
+          {/* Import — admin + researcher only */}
+          {hasPermission(user, "beneficiaries:import") && (
+            <Button variant="outline" size="sm" onClick={() => setImportOpen(true)}
+              className="cursor-pointer gap-2">
+              <Upload className="w-4 h-4" />
+              <span className="hidden sm:inline">استيراد Excel</span>
+            </Button>
+          )}
+          {/* Add — admin + researcher only */}
+          {hasPermission(user, "beneficiaries:create") && (
+            <Button size="sm" onClick={() => { setEditingB(null); setFormOpen(true); }}
+              className="cursor-pointer gap-2">
+              <Users className="w-4 h-4" />
+              <span className="hidden sm:inline">تسجيل مستفيد</span>
+            </Button>
+          )}
         </div>
       </motion.div>
 

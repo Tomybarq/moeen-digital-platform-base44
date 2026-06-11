@@ -20,13 +20,13 @@ const baseNavItems = [
   { label: "لوحة التحكم",   icon: LayoutDashboard, path: "/",             roles: null },
   { label: "المنظمات",       icon: Building2,       path: "/ngos",         roles: null },
   { label: "المستفيدون",     icon: Users,           path: "/beneficiaries",roles: null },
-  { label: "المسوّقون",      icon: Megaphone,       path: "/marketers",    roles: null },
-  { label: "مساحة الباحث",  icon: ClipboardPlus,   path: "/researcher",   roles: [ROLES.SOCIAL_RESEARCHER, ROLES.PLATFORM_ADMIN, ROLES.NGO_ADMIN] },
+  { label: "المسوّقون",      icon: Megaphone,       path: "/marketers",    roles: [ROLES.PLATFORM_ADMIN, ROLES.NGO_MANAGER, ROLES.MARKETER] },
+  { label: "مساحة الباحث",  icon: ClipboardPlus,   path: "/researcher",   roles: [ROLES.RESEARCHER, ROLES.PLATFORM_ADMIN, ROLES.NGO_MANAGER] },
 ];
 
 const bottomNavItems = [
   { label: "إدارة المستخدمين", icon: ShieldCheck,  path: "/users",    roles: [ROLES.PLATFORM_ADMIN] },
-  { label: "إعدادات المنصة",   icon: Settings,     path: "/settings", roles: null },
+  { label: "إعدادات المنصة",   icon: Settings,     path: "/settings", roles: [ROLES.PLATFORM_ADMIN] },
   { label: "الملف الشخصي",     icon: UserCircle,   path: "/profile",  roles: null },
 ];
 
@@ -78,6 +78,9 @@ export default function Sidebar({ collapsed, onToggle, onNavigate }) {
   const location = useLocation();
   const { user } = useAuth();
 
+  const visibleMain = baseNavItems.filter(
+    item => !item.roles || item.roles.includes(user?.role)
+  );
   const visibleBottom = bottomNavItems.filter(
     item => !item.roles || item.roles.includes(user?.role)
   );
@@ -122,7 +125,7 @@ export default function Sidebar({ collapsed, onToggle, onNavigate }) {
             القائمة الرئيسية
           </p>
         )}
-        {baseNavItems.map(item => (
+        {visibleMain.map(item => (
           <NavLink
             key={item.path}
             item={item}

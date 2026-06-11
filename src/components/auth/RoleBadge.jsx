@@ -1,12 +1,13 @@
-import { ShieldCheck, Building2, Search, Megaphone } from "lucide-react";
+import { ShieldCheck, Building2, Search, Megaphone, Lock } from "lucide-react";
 import { getRoleColor, getRoleLabel } from "@/lib/rbac";
 import { cn } from "@/lib/utils";
 
 const iconMap = {
   platform_admin: ShieldCheck,
-  ngo_admin: Building2,
-  social_researcher: Search,
-  marketer: Megaphone,
+  ngo_manager:    Building2,
+  researcher:     Search,
+  marketer:       Megaphone,
+  pdo:            Lock,
 };
 
 export default function RoleBadge({ role, size = "default" }) {
