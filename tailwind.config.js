@@ -59,13 +59,22 @@ module.exports = {
   				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
   				border: 'hsl(var(--sidebar-border))',
   				ring: 'hsl(var(--sidebar-ring))'
-  			}
+  			},
+  			brand: {
+  				navy:        '#0c3140',
+  				'navy-dark': '#0d2e42',
+  				gold:        '#c8972a',
+  				'gold-light':'#c69321',
+  				'gray-bg':   '#f4f5f9',
+  			},
   		},
   		fontFamily: {
   			heading: ['var(--font-heading)'],
   			body: ['var(--font-body)'],
   			display: ['var(--font-display)'],
-  			mono: ['var(--font-mono)']
+  			mono: ['var(--font-mono)'],
+  			cairo: ['Cairo', 'Noto Sans Arabic', 'system-ui', 'sans-serif'],
+  			arabic: ['Noto Sans Arabic', 'Cairo', 'system-ui', 'sans-serif'],
   		},
   		keyframes: {
   			'accordion-down': {

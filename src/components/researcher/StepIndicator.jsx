@@ -12,27 +12,29 @@ export default function StepIndicator({ steps, currentStep }) {
           <div key={i} className="flex items-center flex-1 last:flex-none">
             {/* Circle */}
             <div className="flex flex-col items-center gap-1 flex-shrink-0">
-              <div className={cn(
-                "w-9 h-9 rounded-full flex items-center justify-center border-2 transition-all duration-300",
-                done   && "bg-primary border-primary text-primary-foreground",
-                active && "bg-primary/10 border-primary text-primary",
-                !done && !active && "bg-muted border-border text-muted-foreground"
-              )}>
+              <div
+                className="w-9 h-9 rounded-full flex items-center justify-center border-2 transition-all duration-300"
+                style={{
+                  background: done ? "#0c3140" : active ? "rgba(200,151,42,0.15)" : undefined,
+                  borderColor: done ? "#0c3140" : active ? "#c8972a" : undefined,
+                  color: done ? "#fff" : active ? "#c8972a" : undefined,
+                }}
+              >
                 {done ? <Check className="w-4 h-4" /> : <Icon className="w-4 h-4" />}
               </div>
-              <span className={cn(
-                "text-xs font-medium text-center leading-tight hidden sm:block",
-                active ? "text-primary" : done ? "text-foreground" : "text-muted-foreground"
-              )}>
+              <span
+                className="text-xs font-medium text-center leading-tight hidden sm:block font-body"
+                style={{ color: active ? "#c8972a" : done ? "#0c3140" : undefined }}
+              >
                 {step.label}
               </span>
             </div>
             {/* Connector line */}
             {i < steps.length - 1 && (
-              <div className={cn(
-                "h-0.5 flex-1 mx-1 mt-[-18px] sm:mt-[-22px] transition-colors duration-300",
-                i < currentStep ? "bg-primary" : "bg-border"
-              )} />
+              <div
+                className="h-0.5 flex-1 mx-1 mt-[-18px] sm:mt-[-22px] transition-colors duration-300"
+                style={{ background: i < currentStep ? "#0c3140" : undefined }}
+              />
             )}
           </div>
         );
