@@ -5,7 +5,7 @@ import { useAuth } from "@/lib/AuthContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { ClipboardPlus, ListChecks, Search } from "lucide-react";
-import CaseSubmissionForm from "@/components/researcher/CaseSubmissionForm";
+import CaseWizard from "@/components/researcher/CaseWizard";
 import MyCasesList from "@/components/researcher/MyCasesList";
 
 export default function ResearcherWorkspace() {
@@ -68,7 +68,7 @@ export default function ResearcherWorkspace() {
                 </ul>
               </div>
             </div>
-            <CaseSubmissionForm researcherName={researcherName} onSuccess={handleSuccess} />
+            <CaseWizard researcherName={researcherName} onSuccess={handleSuccess} />
           </div>
         </TabsContent>
 

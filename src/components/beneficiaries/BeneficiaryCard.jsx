@@ -1,5 +1,6 @@
 import { Phone, MapPin, User, Briefcase, Users, Pencil, Archive, Trash2, Paperclip, Eye } from "lucide-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import PriorityBadge from "./PriorityBadge";
@@ -25,6 +26,7 @@ const STATUS_MAP = {
 };
 
 export default function BeneficiaryCard({ beneficiary: b, index = 0, onEdit, onArchive, onDelete, onViewDocs }) {
+  const navigate = useNavigate();
   const initials = b.full_name?.split(" ").slice(0, 2).map(w => w[0]).join("") || "؟";
   const status = STATUS_MAP[b.status] || STATUS_MAP.active;
   const docsCount = b.documents?.length || 0;
@@ -88,6 +90,11 @@ export default function BeneficiaryCard({ beneficiary: b, index = 0, onEdit, onA
 
       {/* Footer actions */}
       <div className="flex items-center gap-1 pt-1 border-t border-border">
+        <Button variant="ghost" size="sm"
+          onClick={() => navigate(`/beneficiaries/detail?id=${b.id}`)}
+          className="flex-1 text-xs h-7 gap-1 cursor-pointer text-primary">
+          <Eye className="w-3 h-3" /> تفاصيل
+        </Button>
         <Button variant="ghost" size="sm" onClick={() => onEdit(b)}
           className="flex-1 text-xs h-7 gap-1 cursor-pointer">
           <Pencil className="w-3 h-3" /> تعديل

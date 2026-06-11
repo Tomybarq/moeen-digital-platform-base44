@@ -4,11 +4,15 @@
   "properties": {
     "full_name": {
       "type": "string",
-      "description": "\u0627\u0644\u0627\u0633\u0645 \u0627\u0644\u0643\u0627\u0645\u0644"
+      "description": "\u0627\u0633\u0645 \u0631\u0628 \u0627\u0644\u0623\u0633\u0631\u0629"
     },
     "national_id": {
       "type": "string",
       "description": "\u0631\u0642\u0645 \u0627\u0644\u0647\u0648\u064a\u0629 \u0627\u0644\u0648\u0637\u0646\u064a\u0629"
+    },
+    "birth_year": {
+      "type": "number",
+      "description": "\u0633\u0646\u0629 \u0627\u0644\u0645\u064a\u0644\u0627\u062f"
     },
     "age": {
       "type": "number",
@@ -24,7 +28,11 @@
     },
     "phone": {
       "type": "string",
-      "description": "\u0631\u0642\u0645 \u0627\u0644\u062c\u0648\u0627\u0644"
+      "description": "\u0631\u0642\u0645 \u0627\u0644\u062c\u0648\u0627\u0644 \u0627\u0644\u0623\u0633\u0627\u0633\u064a"
+    },
+    "phone_alt": {
+      "type": "string",
+      "description": "\u0631\u0642\u0645 \u062c\u0648\u0627\u0644 \u0628\u062f\u064a\u0644"
     },
     "city": {
       "type": "string",
@@ -34,19 +42,212 @@
       "type": "string",
       "description": "\u0627\u0644\u062d\u064a"
     },
+    "national_address": {
+      "type": "string",
+      "description": "\u0627\u0644\u0639\u0646\u0648\u0627\u0646 \u0627\u0644\u0648\u0637\u0646\u064a"
+    },
     "social_status": {
       "type": "string",
       "enum": [
         "\u0623\u0639\u0632\u0628",
         "\u0645\u062a\u0632\u0648\u062c",
         "\u0645\u0637\u0644\u0642",
-        "\u0623\u0631\u0645\u0644"
+        "\u0623\u0631\u0645\u0644",
+        "\u0645\u0647\u062c\u0648\u0631"
       ],
       "description": "\u0627\u0644\u062d\u0627\u0644\u0629 \u0627\u0644\u0627\u062c\u062a\u0645\u0627\u0639\u064a\u0629"
+    },
+    "education_level": {
+      "type": "string",
+      "description": "\u0627\u0644\u0645\u0633\u062a\u0648\u0649 \u0627\u0644\u062a\u0639\u0644\u064a\u0645\u064a"
+    },
+    "health_status": {
+      "type": "string",
+      "enum": [
+        "\u0633\u0644\u064a\u0645",
+        "\u0645\u0639\u0627\u0642",
+        "\u0645\u0631\u064a\u0636"
+      ],
+      "description": "\u0627\u0644\u062d\u0627\u0644\u0629 \u0627\u0644\u0635\u062d\u064a\u0629"
+    },
+    "disability": {
+      "type": "boolean",
+      "description": "\u0625\u0639\u0627\u0642\u0629"
+    },
+    "disability_type": {
+      "type": "string",
+      "description": "\u0646\u0648\u0639 \u0627\u0644\u0625\u0639\u0627\u0642\u0629"
+    },
+    "sickness_type": {
+      "type": "string",
+      "description": "\u0646\u0648\u0639 \u0627\u0644\u0645\u0631\u0636"
     },
     "dependents_count": {
       "type": "number",
       "description": "\u0639\u062f\u062f \u0623\u0641\u0631\u0627\u062f \u0627\u0644\u0623\u0633\u0631\u0629"
+    },
+    "dependents_data": {
+      "type": "array",
+      "description": "\u0628\u064a\u0627\u0646\u0627\u062a \u0627\u0644\u062a\u0627\u0628\u0639\u064a\u0646",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "age": {
+            "type": "number"
+          },
+          "relation": {
+            "type": "string"
+          },
+          "health_status": {
+            "type": "string"
+          },
+          "education": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "researcher_opinion_basic": {
+      "type": "string",
+      "description": "\u0631\u0623\u064a \u0627\u0644\u0628\u0627\u062d\u062b \u2014 \u0627\u0644\u0628\u064a\u0627\u0646\u0627\u062a \u0627\u0644\u0623\u0633\u0627\u0633\u064a\u0629"
+    },
+    "researcher_opinion_dependents": {
+      "type": "string",
+      "description": "\u0631\u0623\u064a \u0627\u0644\u0628\u0627\u062d\u062b \u2014 \u0627\u0644\u062a\u0627\u0628\u0639\u0648\u0646"
+    },
+    "income_salary": {
+      "type": "number",
+      "description": "\u0631\u0627\u062a\u0628 \u0648\u0638\u064a\u0641\u064a"
+    },
+    "income_social_security": {
+      "type": "number",
+      "description": "\u0627\u0644\u0636\u0645\u0627\u0646 \u0627\u0644\u0627\u062c\u062a\u0645\u0627\u0639\u064a"
+    },
+    "income_account_citizen": {
+      "type": "number",
+      "description": "\u062d\u0633\u0627\u0628 \u0627\u0644\u0645\u0648\u0627\u0637\u0646"
+    },
+    "income_rehab": {
+      "type": "number",
+      "description": "\u0627\u0644\u062a\u0623\u0647\u064a\u0644 \u0627\u0644\u0634\u0627\u0645\u0644"
+    },
+    "income_other_ngos": {
+      "type": "number",
+      "description": "\u062f\u0639\u0645 \u062c\u0645\u0639\u064a\u0627\u062a \u0623\u062e\u0631\u0649"
+    },
+    "income_other_sources": {
+      "type": "string",
+      "description": "\u0645\u0635\u0627\u062f\u0631 \u062f\u062e\u0644 \u0623\u062e\u0631\u0649 (\u0645\u0627\u0634\u064a\u0629\u060c \u0645\u0632\u0631\u0639\u0629\u060c \u0625\u0644\u062e)"
+    },
+    "total_income": {
+      "type": "number",
+      "description": "\u0625\u062c\u0645\u0627\u0644\u064a \u0627\u0644\u062f\u062e\u0644"
+    },
+    "expense_rent": {
+      "type": "number",
+      "description": "\u0627\u0644\u0625\u064a\u062c\u0627\u0631"
+    },
+    "expense_electricity": {
+      "type": "number",
+      "description": "\u0627\u0644\u0643\u0647\u0631\u0628\u0627\u0621"
+    },
+    "expense_water": {
+      "type": "number",
+      "description": "\u0627\u0644\u0645\u0627\u0621"
+    },
+    "expense_internet": {
+      "type": "number",
+      "description": "\u0627\u0644\u0625\u0646\u062a\u0631\u0646\u062a"
+    },
+    "expense_medical": {
+      "type": "number",
+      "description": "\u0627\u0644\u0639\u0644\u0627\u062c"
+    },
+    "expense_transport": {
+      "type": "number",
+      "description": "\u0627\u0644\u0645\u0648\u0627\u0635\u0644\u0627\u062a"
+    },
+    "expense_food": {
+      "type": "number",
+      "description": "\u0627\u0644\u063a\u0630\u0627\u0621"
+    },
+    "expense_debt_installment": {
+      "type": "number",
+      "description": "\u0623\u0642\u0633\u0627\u0637 \u0627\u0644\u062f\u064a\u0648\u0646"
+    },
+    "debt_reason": {
+      "type": "string",
+      "description": "\u0633\u0628\u0628 \u0627\u0644\u062f\u064a\u0646"
+    },
+    "debt_period": {
+      "type": "string",
+      "description": "\u0645\u062f\u0629 \u0627\u0644\u062f\u064a\u0646"
+    },
+    "total_expenses": {
+      "type": "number",
+      "description": "\u0625\u062c\u0645\u0627\u0644\u064a \u0627\u0644\u0645\u0635\u0631\u0648\u0641\u0627\u062a"
+    },
+    "net_income": {
+      "type": "number",
+      "description": "\u0635\u0627\u0641\u064a \u0627\u0644\u062f\u062e\u0644"
+    },
+    "researcher_opinion_financial": {
+      "type": "string",
+      "description": "\u0631\u0623\u064a \u0627\u0644\u0628\u0627\u062d\u062b \u2014 \u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u0645\u0627\u0644\u064a"
+    },
+    "environment_type": {
+      "type": "string",
+      "enum": [
+        "\u0647\u062c\u0631\u0629",
+        "\u0628\u0627\u062f\u064a\u0629",
+        "\u0642\u0631\u064a\u0629",
+        "\u0645\u062d\u0627\u0641\u0638\u0629",
+        "\u0645\u062f\u064a\u0646\u0629"
+      ],
+      "description": "\u0646\u0648\u0639 \u0627\u0644\u0628\u064a\u0626\u0629"
+    },
+    "housing_type": {
+      "type": "string",
+      "enum": [
+        "\u0634\u0639\u0628\u064a",
+        "\u0634\u0642\u0629",
+        "\u0641\u064a\u0644\u0627",
+        "\u0645\u0644\u062d\u0642"
+      ],
+      "description": "\u0646\u0648\u0639 \u0627\u0644\u0633\u0643\u0646"
+    },
+    "housing_tenure": {
+      "type": "string",
+      "enum": [
+        "\u0625\u064a\u062c\u0627\u0631",
+        "\u0645\u0644\u0643",
+        "\u0625\u0631\u062b",
+        "\u0648\u0642\u0641"
+      ],
+      "description": "\u062d\u064a\u0627\u0632\u0629 \u0627\u0644\u0633\u0643\u0646"
+    },
+    "researcher_opinion_housing": {
+      "type": "string",
+      "description": "\u0631\u0623\u064a \u0627\u0644\u0628\u0627\u062d\u062b \u2014 \u0627\u0644\u0633\u0643\u0646"
+    },
+    "basic_needs": {
+      "type": "string",
+      "description": "\u0627\u0644\u0627\u062d\u062a\u064a\u0627\u062c\u0627\u062a \u0627\u0644\u0623\u0633\u0627\u0633\u064a\u0629 (JSON)"
+    },
+    "non_basic_needs": {
+      "type": "string",
+      "description": "\u0627\u0644\u0627\u062d\u062a\u064a\u0627\u062c\u0627\u062a \u063a\u064a\u0631 \u0627\u0644\u0623\u0633\u0627\u0633\u064a\u0629 (JSON)"
+    },
+    "researcher_opinion_needs": {
+      "type": "string",
+      "description": "\u0631\u0623\u064a \u0627\u0644\u0628\u0627\u062d\u062b \u2014 \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u062c\u0627\u062a"
+    },
+    "final_recommendation": {
+      "type": "string",
+      "description": "\u0627\u0644\u062a\u0648\u0635\u064a\u0629 \u0627\u0644\u0646\u0647\u0627\u0626\u064a\u0629"
     },
     "income_level": {
       "type": "string",
@@ -55,11 +256,7 @@
         "\u062f\u062e\u0644 \u0645\u0646\u062e\u0641\u0636",
         "\u062f\u062e\u0644 \u0645\u062a\u0648\u0633\u0637"
       ],
-      "description": "\u0645\u0633\u062a\u0648\u0649 \u0627\u0644\u062f\u062e\u0644"
-    },
-    "disability": {
-      "type": "boolean",
-      "description": "\u0625\u0639\u0627\u0642\u0629"
+      "description": "\u0645\u0633\u062a\u0648\u0649 \u0627\u0644\u062f\u062e\u0644 (\u0645\u0628\u0633\u0651\u0637)"
     },
     "case_type": {
       "type": "string",
@@ -93,6 +290,20 @@
       "default": "active",
       "description": "\u062d\u0627\u0644\u0629 \u0627\u0644\u0645\u0633\u062a\u0641\u064a\u062f"
     },
+    "file_number": {
+      "type": "string",
+      "description": "\u0631\u0642\u0645 \u0627\u0644\u0645\u0644\u0641"
+    },
+    "case_status": {
+      "type": "string",
+      "enum": [
+        "\u062c\u062f\u064a\u062f",
+        "\u062a\u062d\u062f\u064a\u062b",
+        "\u062e\u0627\u0631\u062c\u064a"
+      ],
+      "default": "\u062c\u062f\u064a\u062f",
+      "description": "\u062d\u0627\u0644\u0629 \u0627\u0644\u0637\u0644\u0628"
+    },
     "ngo_id": {
       "type": "string",
       "description": "\u0627\u0644\u0645\u0646\u0638\u0645\u0629 \u0627\u0644\u0645\u0631\u062a\u0628\u0637\u0629"
@@ -120,6 +331,10 @@
       "type": "string",
       "format": "date",
       "description": "\u062a\u0627\u0631\u064a\u062e \u0627\u0644\u0632\u064a\u0627\u0631\u0629 \u0627\u0644\u0645\u064a\u062f\u0627\u0646\u064a\u0629"
+    },
+    "approved_by": {
+      "type": "string",
+      "description": "\u0627\u0639\u062a\u0645\u0627\u062f \u0627\u0644\u0645\u062f\u064a\u0631"
     }
   },
   "required": [
