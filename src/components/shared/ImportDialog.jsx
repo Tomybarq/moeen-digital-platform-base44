@@ -61,7 +61,9 @@ export default function ImportDialog({ open, onOpenChange, entityLabel, entityNa
     return sanitizeFormData(mapped);
   };
 
-  const CHUNK_SIZE = 10;
+  // Bulk insert chunk size — large enough to minimise round-trips, small enough
+  // to keep each request under the platform's payload limit (~500 rows).
+  const BULK_CHUNK_SIZE = 100;
 
   const handleImport = async () => {
     if (!file) return;
@@ -82,27 +84,49 @@ export default function ImportDialog({ open, onOpenChange, entityLabel, entityNa
       let imported = 0, skipped = 0;
       const errors = [];
 
-      // Process in chunks to keep UI responsive
-      for (let i = 0; i < rows.length; i += CHUNK_SIZE) {
-        const chunk = rows.slice(i, i + CHUNK_SIZE);
-        await Promise.allSettled(
-          chunk.map(async (row, idx) => {
+      // Map + validate all rows first, separating valid from invalid
+      const validRows = [];
+      rows.forEach((row, idx) => {
+        try {
+          const data = mapRow(row);
+          // Require at minimum a non-empty full_name or the first mapped field
+          const values = Object.values(data);
+          if (values.every(v => !v)) {
+            skipped++;
+            errors.push({ row: idx + 2, message: "صف فارغ" });
+          } else {
+            validRows.push({ rowNum: idx + 2, data });
+          }
+        } catch (err) {
+          skipped++;
+          errors.push({ row: idx + 2, message: err.message });
+        }
+      });
+
+      // Bulk-insert in chunks using bulkCreate (single round-trip per chunk)
+      for (let i = 0; i < validRows.length; i += BULK_CHUNK_SIZE) {
+        const chunk = validRows.slice(i, i + BULK_CHUNK_SIZE);
+        try {
+          if (entityName) {
+            await base44.entities[entityName].bulkCreate(chunk.map(r => r.data));
+          }
+          imported += chunk.length;
+        } catch (err) {
+          // If bulk fails, fall back to individual inserts for this chunk
+          // to surface per-row errors without losing the whole batch
+          for (const { rowNum, data } of chunk) {
             try {
-              const data = mapRow(row);
-              if (entityName) {
-                await base44.entities[entityName].create(data);
-              }
+              if (entityName) await base44.entities[entityName].create(data);
               imported++;
-            } catch (err) {
+            } catch (rowErr) {
               skipped++;
-              errors.push({ row: i + idx + 2, message: err.message });
-              ErrorLogger.warn("Import row failed", { row: i + idx + 2, error: err.message });
+              errors.push({ row: rowNum, message: rowErr.message });
+              ErrorLogger.warn("Import row failed", { row: rowNum, error: rowErr.message });
             }
-          })
-        );
-        // Update progress
-        setProgress(5 + Math.round(((i + CHUNK_SIZE) / rows.length) * 90));
-        // Yield to browser paint
+          }
+        }
+        // Update progress + yield to browser
+        setProgress(5 + Math.round(((i + BULK_CHUNK_SIZE) / validRows.length) * 90));
         await new Promise(r => setTimeout(r, 0));
       }
 

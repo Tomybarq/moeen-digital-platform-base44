@@ -5,6 +5,8 @@ import { paginate, DEFAULT_PAGE_SIZE } from "@/lib/pagination";
 import { ErrorLogger } from "@/lib/errorLogger";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
+import { useAuth } from "@/lib/AuthContext";
+import { filterByNGO, assertNGOScope } from "@/lib/rbac";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -17,6 +19,8 @@ import BeneficiaryFilters from "@/components/beneficiaries/BeneficiaryFilters";
 import DocumentsDialog from "@/components/beneficiaries/DocumentsDialog";
 import MarketingKitDialog from "@/components/marketing/MarketingKitDialog";
 
+import { matchesSearch } from "@/lib/search";
+
 const PRIORITY_ORDER = { "عاجل": 0, "مرتفع": 1, "متوسط": 2, "منخفض": 3 };
 
 const DEFAULT_FILTERS = {
@@ -26,6 +30,7 @@ const DEFAULT_FILTERS = {
 
 export default function Beneficiaries() {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   const [search, setSearch]       = useState("");
   const [filters, setFilters]     = useState(DEFAULT_FILTERS);
@@ -39,10 +44,16 @@ export default function Beneficiaries() {
   const [pageSize, setPageSize]   = useState(DEFAULT_PAGE_SIZE);
 
   // ── Data ──────────────────────────────────────────────────────────────────
-  const { data: beneficiaries = [], isLoading } = useQuery({
+  const { data: rawBeneficiaries = [], isLoading } = useQuery({
     queryKey: ["beneficiaries"],
     queryFn: () => base44.entities.Beneficiary.list("-created_date"),
   });
+
+  // Apply NGO-level data isolation (RLS equivalent at app layer)
+  const beneficiaries = useMemo(
+    () => filterByNGO(user, rawBeneficiaries),
+    [user, rawBeneficiaries]
+  );
 
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.Beneficiary.create(data),
@@ -61,6 +72,8 @@ export default function Beneficiaries() {
 
   // ── Handlers ──────────────────────────────────────────────────────────────
   const handleSave = async (data) => {
+    // Enforce NGO scope before writing
+    assertNGOScope(user, data);
     if (editingB) await updateMutation.mutateAsync({ id: editingB.id, data });
     else await createMutation.mutateAsync(data);
   };
@@ -96,8 +109,8 @@ export default function Beneficiaries() {
   // ── Filter + Sort ─────────────────────────────────────────────────────────
   const filtered = useMemo(() => {
     let list = beneficiaries.filter(b => {
-      if (search && !b.full_name?.includes(search) && !b.city?.includes(search) &&
-          !b.national_id?.includes(search) && !b.ngo_name?.includes(search)) return false;
+      // Normalized full-text search across key fields
+      if (search && !matchesSearch(search, [b.full_name, b.city, b.national_id, b.ngo_name, b.district, b.researcher_name])) return false;
       if (filters.priority !== "الكل" && b.priority !== filters.priority) return false;
       if (filters.case_type !== "الكل" && b.case_type !== filters.case_type) return false;
       if (filters.social_status !== "الكل" && b.social_status !== filters.social_status) return false;
