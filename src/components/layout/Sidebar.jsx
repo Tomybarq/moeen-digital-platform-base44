@@ -35,13 +35,17 @@ function NavLink({ item, collapsed, onNavigate, isActive }) {
     <Link
       to={item.path}
       onClick={onNavigate}
+      title={collapsed ? item.label : undefined}
       className={cn(
-        "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer group",
+        "relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer group",
         isActive
-          ? "bg-[#c8972a] text-white shadow-sm"
-          : "text-white/80 hover:bg-white/10 hover:text-white"
+          ? "bg-[#c8972a] text-white shadow-md shadow-[#c8972a]/30"
+          : "text-white/80 hover:bg-white/10 hover:text-white hover:translate-x-[-2px]"
       )}
     >
+      {isActive && (
+        <span className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-5 rounded-full bg-white/90" />
+      )}
       <item.icon className={cn(
         "w-5 h-5 shrink-0 transition-colors duration-200",
         isActive ? "text-white" : "text-white/70 group-hover:text-white"

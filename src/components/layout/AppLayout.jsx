@@ -12,6 +12,8 @@ const pageTitles = {
   "/profile": "الملف الشخصي",
   "/settings": "إعدادات المنصة",
   "/users": "إدارة المستخدمين",
+  "/researcher": "مساحة الباحث",
+  "/beneficiaries/detail": "ملف المستفيد",
 };
 
 export default function AppLayout() {
@@ -67,7 +69,12 @@ export default function AppLayout() {
           pageTitle={pageTitle}
         />
         <div className="p-4 md:p-6 lg:p-8">
-          <Outlet />
+          <div
+            key={location.pathname}
+            className="max-w-[1440px] mx-auto animate-in fade-in slide-in-from-bottom-2 duration-300"
+          >
+            <Outlet />
+          </div>
         </div>
       </main>
     </div>
