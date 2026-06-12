@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Save, X, Users } from "lucide-react";
+import { Save, X, Users, Loader2 } from "lucide-react";
 import FormFieldError from "@/components/shared/FormFieldError";
-import { validateBeneficiaryForm, sanitizeFormData } from "@/lib/validation";
+import { sanitizeFormData } from "@/lib/validation";
+import { beneficiarySchema, zodValidate, withMinDelay } from "@/lib/schemas";
 
 const EMPTY = {
   full_name: "", national_id: "", age: "", gender: "", phone: "", city: "",
@@ -34,14 +35,14 @@ export default function BeneficiaryFormDialog({ open, onOpenChange, beneficiary,
     setForm(p => ({ ...p, [field]: value }));
     setTouched(p => ({ ...p, [field]: true }));
     // Live validation for touched field
-    const { errors: newErrors } = validateBeneficiaryForm({ ...form, [field]: value });
+    const { errors: newErrors } = zodValidate(beneficiarySchema, { ...form, [field]: value });
     setErrors(prev => ({ ...prev, [field]: newErrors[field] ?? undefined }));
   };
 
   const setSel = (field) => (v) => set(field)(v);
 
   const handleSave = async () => {
-    const { valid, errors: validationErrors } = validateBeneficiaryForm(form);
+    const { valid, errors: validationErrors } = zodValidate(beneficiarySchema, form);
     if (!valid) {
       setErrors(validationErrors);
       // Mark all fields as touched to show all errors
@@ -55,7 +56,7 @@ export default function BeneficiaryFormDialog({ open, onOpenChange, beneficiary,
       age: form.age ? Number(form.age) : undefined,
       dependents_count: form.dependents_count ? Number(form.dependents_count) : undefined,
     });
-    await onSave(clean);
+    await withMinDelay(onSave(clean));
     setSaving(false);
     onOpenChange(false);
   };
@@ -238,7 +239,7 @@ export default function BeneficiaryFormDialog({ open, onOpenChange, beneficiary,
             <X className="w-4 h-4" /> إلغاء
           </Button>
           <Button onClick={handleSave} disabled={saving} className="cursor-pointer gap-1.5">
-            <Save className="w-4 h-4" />
+            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
             {saving ? "جاري الحفظ…" : beneficiary ? "حفظ التعديلات" : "تسجيل المستفيد"}
           </Button>
         </DialogFooter>

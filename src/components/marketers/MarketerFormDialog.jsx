@@ -7,7 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Save, X, Megaphone, AlertTriangle } from "lucide-react";
+import { Save, X, Megaphone, AlertTriangle, Loader2 } from "lucide-react";
+import { marketerSchema, zodValidate, withMinDelay } from "@/lib/schemas";
+import { sanitizeFormData } from "@/lib/validation";
 
 const EMPTY = {
   full_name: "", phone: "", email: "", city: "",
@@ -55,22 +57,14 @@ export default function MarketerFormDialog({ open, onOpenChange, marketer, onSav
     setForm(p => ({ ...p, ngo_id: ngoId, ngo_name: ngo?.name || "" }));
   };
 
-  const validate = () => {
-    const e = {};
-    if (!form.full_name.trim()) e.full_name = "الاسم الكامل مطلوب";
-    if (!form.phone.trim()) e.phone = "رقم الجوال مطلوب";
-    if (!form.ngo_name.trim()) e.ngo_name = "المنظمة المرتبطة مطلوبة";
-    return e;
-  };
-
   const handleSave = async () => {
-    const e = validate();
-    if (Object.keys(e).length) { setErrors(e); return; }
+    const { valid, errors: validationErrors } = zodValidate(marketerSchema, form);
+    if (!valid) { setErrors(validationErrors); return; }
     setSaving(true);
-    await onSave({
+    await withMinDelay(onSave(sanitizeFormData({
       ...form,
       campaigns_count: form.campaigns_count ? Number(form.campaigns_count) : undefined,
-    });
+    })));
     setSaving(false);
     onOpenChange(false);
   };
@@ -97,8 +91,9 @@ export default function MarketerFormDialog({ open, onOpenChange, marketer, onSav
                 <Input placeholder="05xxxxxxxx" value={form.phone} onChange={set("phone")}
                   className={errors.phone ? "border-destructive" : ""} />
               </Field>
-              <Field label="البريد الإلكتروني">
-                <Input type="email" placeholder="email@example.com" value={form.email} onChange={set("email")} />
+              <Field label="البريد الإلكتروني" error={errors.email}>
+                <Input type="email" placeholder="email@example.com" value={form.email} onChange={set("email")}
+                  className={errors.email ? "border-destructive" : ""} />
               </Field>
               <Field label="المدينة">
                 <Input placeholder="الرياض" value={form.city} onChange={set("city")} />
@@ -163,7 +158,7 @@ export default function MarketerFormDialog({ open, onOpenChange, marketer, onSav
             <X className="w-4 h-4" /> إلغاء
           </Button>
           <Button onClick={handleSave} disabled={saving} className="cursor-pointer gap-1.5">
-            <Save className="w-4 h-4" />
+            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
             {saving ? "جاري الحفظ…" : marketer ? "حفظ التعديلات" : "إضافة المسوّق"}
           </Button>
         </DialogFooter>

@@ -1,12 +1,14 @@
 import { useState, useRef } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Paperclip, Upload, X, ZoomIn, Trash2, FileText, Image } from "lucide-react";
+import { Paperclip, Upload, X, ZoomIn, Trash2, FileText, Image, AlertTriangle, Loader2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
+import { validateDocumentFile, DOCUMENT_MAX_MB } from "@/lib/schemas";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function DocumentsDialog({ open, onOpenChange, beneficiary, onUpdate }) {
   const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState(null);
   const [preview, setPreview] = useState(null);
   const inputRef = useRef(null);
   const docs = beneficiary?.documents || [];
@@ -15,6 +17,14 @@ export default function DocumentsDialog({ open, onOpenChange, beneficiary, onUpd
 
   const handleUpload = async (files) => {
     if (!files?.length) return;
+    setUploadError(null);
+
+    // Validate type + size before any upload starts
+    for (const file of Array.from(files)) {
+      const err = validateDocumentFile(file);
+      if (err) { setUploadError(err); return; }
+    }
+
     setUploading(true);
     const uploaded = [];
     for (const file of Array.from(files)) {
@@ -49,11 +59,20 @@ export default function DocumentsDialog({ open, onOpenChange, beneficiary, onUpd
           <input ref={inputRef} type="file" multiple accept="image/*,.pdf" className="hidden"
             onChange={e => handleUpload(e.target.files)} />
           <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-            <Upload className="w-5 h-5 text-primary" />
+            {uploading
+              ? <Loader2 className="w-5 h-5 text-primary animate-spin" />
+              : <Upload className="w-5 h-5 text-primary" />}
           </div>
           <p className="text-sm font-medium">{uploading ? "جاري الرفع…" : "انقر لرفع وثائق أو صور"}</p>
-          <p className="text-xs text-muted-foreground">يدعم الصور وملفات PDF</p>
+          <p className="text-xs text-muted-foreground">يدعم الصور (JPG, PNG, WebP) وملفات PDF — حتى {DOCUMENT_MAX_MB} ميجابايت</p>
         </div>
+
+        {uploadError && (
+          <div className="flex items-center gap-2 p-2.5 rounded-lg bg-destructive/10 border border-destructive/20">
+            <AlertTriangle className="w-4 h-4 text-destructive shrink-0" />
+            <p className="text-xs text-destructive">{uploadError}</p>
+          </div>
+        )}
 
         {/* Docs grid */}
         {docs.length > 0 ? (

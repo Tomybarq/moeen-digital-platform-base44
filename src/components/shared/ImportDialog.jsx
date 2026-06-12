@@ -6,6 +6,7 @@ import { Upload, FileText, CheckCircle2, X, AlertTriangle, Loader2 } from "lucid
 import { motion, AnimatePresence } from "framer-motion";
 import { base44 } from "@/api/base44Client";
 import { sanitizeFormData } from "@/lib/validation";
+import { validateImportFile, IMPORT_MAX_MB } from "@/lib/schemas";
 import { ErrorLogger } from "@/lib/errorLogger";
 
 const PHASE = { IDLE: "idle", PARSING: "parsing", IMPORTING: "importing", DONE: "done", ERROR: "error" };
@@ -23,12 +24,17 @@ export default function ImportDialog({ open, onOpenChange, entityLabel, entityNa
   const [phase, setPhase]         = useState(PHASE.IDLE);
   const [progress, setProgress]   = useState(0);
   const [result, setResult]       = useState(null); // { imported, skipped, errors }
+  const [fileError, setFileError] = useState(null);
   const inputRef = useRef(null);
 
-  const reset = () => { setFile(null); setPhase(PHASE.IDLE); setProgress(0); setResult(null); };
+  const reset = () => { setFile(null); setPhase(PHASE.IDLE); setProgress(0); setResult(null); setFileError(null); };
 
   const handleFile = (f) => {
-    if (f && (f.name.endsWith(".csv") || f.name.endsWith(".xlsx"))) setFile(f);
+    if (!f) return;
+    const err = validateImportFile(f);
+    if (err) { setFileError(err); setFile(null); return; }
+    setFileError(null);
+    setFile(f);
   };
 
   const handleDrop = (e) => {
@@ -237,11 +243,18 @@ export default function ImportDialog({ open, onOpenChange, entityLabel, entityNa
                     </div>
                     <div className="text-center">
                       <p className="text-sm font-medium text-foreground">اسحب الملف هنا أو انقر للاختيار</p>
-                      <p className="text-xs text-muted-foreground mt-1">يدعم CSV (.csv)</p>
+                      <p className="text-xs text-muted-foreground mt-1">يدعم CSV و Excel (.xlsx) — حتى {IMPORT_MAX_MB} ميجابايت</p>
                     </div>
                   </>
                 )}
               </div>
+
+              {fileError && (
+                <div className="mt-2 flex items-center gap-2 p-2.5 rounded-lg bg-destructive/10 border border-destructive/20">
+                  <AlertTriangle className="w-4 h-4 text-destructive shrink-0" />
+                  <p className="text-xs text-destructive">{fileError}</p>
+                </div>
+              )}
 
               <DialogFooter className="gap-2 pt-3">
                 <Button variant="outline" onClick={() => { reset(); onOpenChange(false); }}

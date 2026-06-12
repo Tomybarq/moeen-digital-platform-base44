@@ -9,7 +9,10 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { Building2, Save, X } from "lucide-react";
+import { Building2, Save, X, Loader2 } from "lucide-react";
+import FormFieldError from "@/components/shared/FormFieldError";
+import { ngoSchema, zodValidate, withMinDelay } from "@/lib/schemas";
+import { sanitizeFormData } from "@/lib/validation";
 
 const EMPTY = {
   name: "", responsible_person: "", phone: "", email: "",
@@ -20,21 +23,26 @@ const CATEGORIES = ["خيرية", "تعليمية", "صحية", "بيئية", "�
 
 export default function NGOFormDialog({ open, onOpenChange, ngo, onSave }) {
   const [form, setForm] = useState(EMPTY);
+  const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     setForm(ngo ? { ...EMPTY, ...ngo } : EMPTY);
+    setErrors({});
   }, [ngo, open]);
 
-  const set = (field) => (e) =>
-    setForm((prev) => ({ ...prev, [field]: e.target?.value ?? e }));
-
-  const isValid = form.name.trim() && form.responsible_person.trim() && form.phone.trim() && form.email.trim();
+  const set = (field) => (e) => {
+    const value = e.target?.value ?? e;
+    setForm((prev) => ({ ...prev, [field]: value }));
+    // Clear the field error as the user types
+    if (errors[field]) setErrors((prev) => ({ ...prev, [field]: undefined }));
+  };
 
   const handleSave = async () => {
-    if (!isValid) return;
+    const { valid, errors: validationErrors } = zodValidate(ngoSchema, form);
+    if (!valid) { setErrors(validationErrors); return; }
     setSaving(true);
-    await onSave({ ...form });
+    await withMinDelay(onSave(sanitizeFormData({ ...form })));
     setSaving(false);
     onOpenChange(false);
   };
@@ -51,22 +59,26 @@ export default function NGOFormDialog({ open, onOpenChange, ngo, onSave }) {
 
         <div className="space-y-4 py-2">
           {/* Name */}
-          <Field label="اسم المنظمة *">
-            <Input placeholder="جمعية البر الخيرية بعفراء" value={form.name} onChange={set("name")} />
+          <Field label="اسم المنظمة *" error={errors.name}>
+            <Input placeholder="جمعية البر الخيرية بعفراء" value={form.name} onChange={set("name")}
+              aria-invalid={!!errors.name} className={errors.name ? "border-destructive" : ""} />
           </Field>
 
           {/* Responsible */}
-          <Field label="المسؤول عن المنظمة *">
-            <Input placeholder="اسم المسؤول" value={form.responsible_person} onChange={set("responsible_person")} />
+          <Field label="المسؤول عن المنظمة *" error={errors.responsible_person}>
+            <Input placeholder="اسم المسؤول" value={form.responsible_person} onChange={set("responsible_person")}
+              aria-invalid={!!errors.responsible_person} className={errors.responsible_person ? "border-destructive" : ""} />
           </Field>
 
           {/* Phone + Email */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Field label="رقم التواصل *">
-              <Input placeholder="05xxxxxxxx" value={form.phone} onChange={set("phone")} />
+            <Field label="رقم التواصل *" error={errors.phone}>
+              <Input placeholder="05xxxxxxxx" inputMode="tel" value={form.phone} onChange={set("phone")}
+                aria-invalid={!!errors.phone} className={errors.phone ? "border-destructive" : ""} />
             </Field>
-            <Field label="البريد الإلكتروني *">
-              <Input type="email" placeholder="info@ngo.org" value={form.email} onChange={set("email")} />
+            <Field label="البريد الإلكتروني *" error={errors.email}>
+              <Input type="email" placeholder="info@ngo.org" value={form.email} onChange={set("email")}
+                aria-invalid={!!errors.email} className={errors.email ? "border-destructive" : ""} />
             </Field>
           </div>
 
@@ -90,13 +102,15 @@ export default function NGOFormDialog({ open, onOpenChange, ngo, onSave }) {
           </div>
 
           {/* Donation URL */}
-          <Field label="رابط منصة التبرع">
-            <Input placeholder="https://sahem.ngo/..." value={form.donation_url} onChange={set("donation_url")} />
+          <Field label="رابط منصة التبرع" error={errors.donation_url}>
+            <Input placeholder="https://sahem.ngo/..." value={form.donation_url} onChange={set("donation_url")}
+              aria-invalid={!!errors.donation_url} className={errors.donation_url ? "border-destructive" : ""} />
           </Field>
 
           {/* Logo URL */}
-          <Field label="رابط الشعار (اختياري)">
-            <Input placeholder="https://..." value={form.logo_url} onChange={set("logo_url")} />
+          <Field label="رابط الشعار (اختياري)" error={errors.logo_url}>
+            <Input placeholder="https://..." value={form.logo_url} onChange={set("logo_url")}
+              aria-invalid={!!errors.logo_url} className={errors.logo_url ? "border-destructive" : ""} />
           </Field>
 
           {/* Notes */}
@@ -115,8 +129,8 @@ export default function NGOFormDialog({ open, onOpenChange, ngo, onSave }) {
           <Button variant="outline" onClick={() => onOpenChange(false)} className="cursor-pointer gap-1.5">
             <X className="w-4 h-4" /> إلغاء
           </Button>
-          <Button onClick={handleSave} disabled={!isValid || saving} className="cursor-pointer gap-1.5">
-            <Save className="w-4 h-4" />
+          <Button onClick={handleSave} disabled={saving} className="cursor-pointer gap-1.5">
+            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
             {saving ? "جاري الحفظ…" : ngo ? "حفظ التعديلات" : "إضافة المنظمة"}
           </Button>
         </DialogFooter>
@@ -125,11 +139,12 @@ export default function NGOFormDialog({ open, onOpenChange, ngo, onSave }) {
   );
 }
 
-function Field({ label, children }) {
+function Field({ label, error, children }) {
   return (
     <div className="space-y-1.5">
       <Label className="text-sm font-medium">{label}</Label>
       {children}
+      <FormFieldError message={error} />
     </div>
   );
 }
