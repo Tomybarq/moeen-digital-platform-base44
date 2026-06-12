@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Building2, Users, Search, Megaphone, AlertTriangle, ShieldCheck, Sparkles } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import { useQuery } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { fetchNGOs, fetchBeneficiaries, fetchMarketers } from "@/services/apiService";
 import { getRoleLabel, ROLES, filterByNGO } from "@/lib/rbac";
 
 import KPICard from "@/components/dashboard/KPICard";
@@ -19,21 +19,23 @@ export default function Dashboard() {
   const { user } = useAuth();
   const [filters, setFilters] = useState({ period: "month", region: "all" });
 
+  // All data access goes through the centralized service layer
+  // (src/services/apiService.js) — swap point for the SQL/Firebase backend.
   const { data: ngos = [] } = useQuery({
     queryKey: ["dashboard-ngos"],
-    queryFn: () => base44.entities.NGO.filter({ status: "active" }, "-created_date", 200),
+    queryFn: () => fetchNGOs({ status: "active" }),
     staleTime: 60_000,
   });
 
   const { data: rawBeneficiaries = [] } = useQuery({
     queryKey: ["dashboard-beneficiaries"],
-    queryFn: () => base44.entities.Beneficiary.list("-created_date", 500),
+    queryFn: () => fetchBeneficiaries(),
     staleTime: 60_000,
   });
 
   const { data: marketers = [] } = useQuery({
     queryKey: ["dashboard-marketers"],
-    queryFn: () => base44.entities.Marketer.filter({ status: "active" }, "-created_date", 200),
+    queryFn: () => fetchMarketers({ status: "active" }),
     staleTime: 60_000,
   });
 
