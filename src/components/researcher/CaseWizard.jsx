@@ -153,7 +153,10 @@ export default function CaseWizard({ researcherName, onSuccess }) {
         </div>
       )}
 
-      <StepIndicator steps={STEPS} currentStep={step} />
+      {/* Step indicator with proper padding */}
+      <div className="px-1 pb-2 border-b border-border">
+        <StepIndicator steps={STEPS} currentStep={step} />
+      </div>
 
       <AnimatePresence mode="wait">
         <motion.div key={step} initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}
