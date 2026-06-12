@@ -18,7 +18,7 @@ const pageTitles = {
 
 export default function AppLayout() {
   const location = useLocation();
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   // Close mobile sidebar on route change
