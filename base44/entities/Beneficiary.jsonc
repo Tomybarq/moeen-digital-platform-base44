@@ -343,5 +343,79 @@
     "city",
     "case_type",
     "priority"
-  ]
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": {
+          "$in": [
+            "platform_admin",
+            "researcher"
+          ]
+        }
+      }
+    },
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": {
+              "$in": [
+                "platform_admin",
+                "pdo"
+              ]
+            }
+          }
+        },
+        {
+          "created_by_id": "{{user.id}}",
+          "user_condition": {
+            "role": "researcher"
+          }
+        },
+        {
+          "data.ngo_id": "{{user.data.ngo_id}}",
+          "user_condition": {
+            "role": {
+              "$in": [
+                "ngo_manager",
+                "marketer"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "platform_admin"
+          }
+        },
+        {
+          "created_by_id": "{{user.id}}",
+          "user_condition": {
+            "role": "researcher"
+          }
+        },
+        {
+          "data.ngo_id": "{{user.data.ngo_id}}",
+          "user_condition": {
+            "role": "ngo_manager"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": {
+          "$in": [
+            "platform_admin",
+            "pdo"
+          ]
+        }
+      }
+    }
+  }
 }

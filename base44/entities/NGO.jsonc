@@ -62,5 +62,33 @@
     "responsible_person",
     "phone",
     "email"
-  ]
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "platform_admin"
+      }
+    },
+    "read": true,
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "platform_admin"
+          }
+        },
+        {
+          "data.id": "{{user.data.ngo_id}}",
+          "user_condition": {
+            "role": "ngo_manager"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "platform_admin"
+      }
+    }
+  }
 }
