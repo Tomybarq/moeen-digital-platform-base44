@@ -38,6 +38,7 @@ function NavLink({ item, collapsed, onNavigate, isActive }) {
       title={collapsed ? item.label : undefined}
       className={cn(
         "relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer group",
+        collapsed && "justify-center px-0",
         isActive
           ? "bg-[#00A651] text-white shadow-md shadow-[#00A651]/30"
           : "text-white/80 hover:bg-white/10 hover:text-white hover:translate-x-[-2px]"
@@ -92,8 +93,8 @@ export default function Sidebar({ collapsed, onToggle, onNavigate }) {
   return (
     <aside
       className={cn(
-        "fixed top-0 right-0 h-screen z-30 flex flex-col transition-[width] duration-300 ease-in-out",
-        collapsed ? "w-0 overflow-hidden" : "w-[260px]"
+        "fixed top-0 right-0 h-screen z-30 flex flex-col overflow-hidden transition-[width] duration-300 ease-in-out",
+        collapsed ? "w-[72px]" : "w-[260px]"
       )}
       style={{
         background: "rgba(12,49,64,0.88)",
@@ -104,7 +105,10 @@ export default function Sidebar({ collapsed, onToggle, onNavigate }) {
     >
       {/* Logo */}
       <div
-        className="flex items-center gap-3 px-4 h-16 shrink-0"
+        className={cn(
+          "flex items-center gap-3 h-16 shrink-0",
+          collapsed ? "justify-center px-0" : "px-4"
+        )}
         style={{ borderBottom: "1px solid rgba(0,166,81,0.25)" }}
       >
         <LogoMark size={38} />
