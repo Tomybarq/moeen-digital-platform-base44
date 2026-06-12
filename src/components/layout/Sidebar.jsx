@@ -93,7 +93,7 @@ export default function Sidebar({ collapsed, onToggle, onNavigate }) {
     <aside
       className={cn(
         "fixed top-0 right-0 h-screen z-30 flex flex-col transition-[width] duration-300 ease-in-out",
-        collapsed ? "w-[72px]" : "w-[260px]"
+        collapsed ? "w-0 overflow-hidden" : "w-[260px]"
       )}
       style={{ background: "#0c3140", borderLeft: "1px solid rgba(200,151,42,0.2)" }}
     >
