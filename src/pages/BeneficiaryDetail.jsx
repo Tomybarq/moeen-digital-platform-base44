@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import BeneficiaryService from "@/services/BeneficiaryService";
 import { useAuth } from "@/lib/AuthContext";
 import { hasPermission } from "@/lib/rbac";
 import { motion } from "framer-motion";
@@ -68,18 +68,17 @@ export default function BeneficiaryDetail() {
 
   const { data: b, isLoading } = useQuery({
     queryKey: ["beneficiary", id],
-    queryFn: () => base44.entities.Beneficiary.filter({ id }),
+    queryFn: () => BeneficiaryService.getById(id),
     enabled: !!id,
-    select: d => Array.isArray(d) ? d[0] : d,
   });
 
   const archiveMutation = useMutation({
-    mutationFn: () => base44.entities.Beneficiary.update(id, { status: "archived" }),
+    mutationFn: () => BeneficiaryService.update(id, { status: "archived" }),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["beneficiaries"] }); navigate("/beneficiaries"); },
   });
 
   const deleteMutation = useMutation({
-    mutationFn: () => base44.entities.Beneficiary.delete(id),
+    mutationFn: () => BeneficiaryService.delete(id),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["beneficiaries"] }); navigate("/beneficiaries"); },
   });
 

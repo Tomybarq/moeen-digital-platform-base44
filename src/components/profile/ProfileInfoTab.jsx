@@ -12,7 +12,7 @@ import {
   Phone, Building2, MapPin, Search, Megaphone, Briefcase, Info,
 } from "lucide-react";
 import { getRoleLabel, ROLE_DESCRIPTIONS } from "@/lib/rbac";
-import { base44 } from "@/api/base44Client";
+import UserService from "@/services/UserService";
 
 const SA_CITIES = ["الرياض","جدة","مكة المكرمة","المدينة المنورة","الدمام","الخبر","تبوك","أبها","القصيم","حائل","جازان","نجران","الباحة","الطائف","خميس مشيط"];
 
@@ -104,7 +104,7 @@ export default function ProfileInfoTab({ user }) {
     e.preventDefault();
     setSaving(true); setSaved(false);
     try {
-      await base44.auth.updateMe(form);
+      await UserService.updateMe(form);
       setSaved(true);
       setTimeout(() => setSaved(false), 3500);
     } finally { setSaving(false); }

@@ -11,7 +11,7 @@ import StepBasicNeeds from "./steps/StepBasicNeeds";
 import StepNonBasicNeeds from "./steps/StepNonBasicNeeds";
 import StepDocumentsUpload from "./steps/StepDocumentsUpload";
 import StepSummary from "./steps/StepSummary";
-import { base44 } from "@/api/base44Client";
+import BeneficiaryService from "@/services/BeneficiaryService";
 import { User, Users, DollarSign, Home, Heart, Lightbulb, Paperclip, CheckSquare } from "lucide-react";
 
 const STEPS = [
@@ -92,7 +92,7 @@ export default function CaseWizard({ researcherName, onSuccess }) {
     if (Object.keys(e).length) { setErrors(e); return; }
     setSubmitting(true);
     const docs = (form.documents || []).map(d => (typeof d === "object" ? d.url : d));
-    await base44.entities.Beneficiary.create({
+    await BeneficiaryService.create({
       ...form,
       age: form.age ? Number(form.age) : undefined,
       birth_year: form.birth_year ? Number(form.birth_year) : undefined,

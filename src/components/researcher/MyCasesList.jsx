@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import BeneficiaryService from "@/services/BeneficiaryService";
 import { motion } from "framer-motion";
 import { Search, Paperclip, MapPin, Calendar, AlertTriangle, ArrowUp, Minus, ArrowDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -35,7 +35,7 @@ export default function MyCasesList({ researcherName }) {
 
   const { data: allCases = [], isLoading } = useQuery({
     queryKey: ["beneficiaries", "researcher", researcherName],
-    queryFn: () => base44.entities.Beneficiary.list("-created_date"),
+    queryFn: () => BeneficiaryService.getAll(),
     enabled: !!researcherName,
   });
 

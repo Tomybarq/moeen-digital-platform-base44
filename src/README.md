@@ -50,11 +50,23 @@ npm run dev
 src/
 ├── pages/          # One file per route (registered in App.jsx)
 ├── components/     # Reusable components, grouped by domain (auth/, dashboard/, …)
-├── services/       # apiService.js — centralized async data layer (backend swap point)
-├── types/          # JSDoc type definitions matching the SQL column names
+├── services/       # Domain services (NGOService, BeneficiaryService, etc.) + apiService.js
+├── adapters/       # Backend adapters — Base44Adapter.js (swap point for Supabase/Firebase/API)
+├── config.js       # DATA_PROVIDER setting + simulated latency
+├── types/          # JSDoc type definitions
 ├── hooks/          # Custom React hooks
-└── lib/            # rbac.js · schemas.js (Zod) · mockData.js · AuthContext
+└── lib/            # rbac.js · schemas.js (Zod) · AuthContext · validation
 ```
+
+### Data Flow
+
+```
+Page / Component → Domain Service → Adapter → Backend SDK
+```
+
+- **No component or page imports `base44` from `@/api/base44Client` directly.**
+- Only two files may touch the SDK: `adapters/Base44Adapter.js` and `lib/AuthContext.jsx` (platform-managed).
+- To swap backends, replace only the adapter — services stay identical.
 
 ## 🔌 Architecture — Backend-Agnostic Data Layer
 

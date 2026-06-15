@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+import UserService from "@/services/UserService";
 import { useAuth } from "@/lib/AuthContext";
 import { ROLE_LABELS, ROLES } from "@/lib/rbac";
 import RoleBadge from "@/components/auth/RoleBadge";
@@ -46,7 +46,7 @@ export default function UsersManagement() {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const data = await base44.entities.User.list("-created_date", 100);
+      const data = await UserService.getAll();
       setUsers(data);
     } finally {
       setLoading(false);
@@ -54,12 +54,12 @@ export default function UsersManagement() {
   };
 
   const handleRoleChange = async (uid, newRole) => {
-    await base44.entities.User.update(uid, { role: newRole });
+    await UserService.update(uid, { role: newRole });
     setUsers(prev => prev.map(u => u.id === uid ? { ...u, role: newRole } : u));
   };
 
   const handleToggleActive = async (uid, current) => {
-    await base44.entities.User.update(uid, { is_active: !current });
+    await UserService.update(uid, { is_active: !current });
     setUsers(prev => prev.map(u => u.id === uid ? { ...u, is_active: !current } : u));
   };
 
@@ -68,7 +68,7 @@ export default function UsersManagement() {
     setInviteError("");
     setInviting(true);
     try {
-      await base44.users.inviteUser(inviteEmail, inviteRole === ROLES.PLATFORM_ADMIN ? "admin" : "user");
+      await UserService.inviteUser(inviteEmail, inviteRole === ROLES.PLATFORM_ADMIN ? "admin" : "user");
       setInviteDone(true);
     } catch (err) {
       setInviteError(err.message || "فشل إرسال الدعوة");

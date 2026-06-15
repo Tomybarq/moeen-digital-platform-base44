@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import MarketerService from "@/services/MarketerService";
+import { fetchNGOs, fetchBeneficiaries } from "@/services/apiService";
 import MarketingKitDialog from "@/components/marketing/MarketingKitDialog";
 import { motion, AnimatePresence } from "framer-motion";
 import { Megaphone, Search, LayoutGrid, List, Filter, Package } from "lucide-react";
@@ -40,32 +41,32 @@ export default function Marketers() {
   // ── Queries ──────────────────────────────────────────────────────────────
   const { data: marketers = [], isLoading } = useQuery({
     queryKey: ["marketers"],
-    queryFn: () => base44.entities.Marketer.list("-created_date"),
+    queryFn: () => MarketerService.getAll(),
   });
 
   const { data: ngos = [] } = useQuery({
     queryKey: ["ngos-list"],
-    queryFn: () => base44.entities.NGO.filter({ status: "active" }),
+    queryFn: () => fetchNGOs(),
   });
 
   const { data: beneficiaries = [] } = useQuery({
     queryKey: ["beneficiaries"],
-    queryFn: () => base44.entities.Beneficiary.list("-created_date"),
+    queryFn: () => fetchBeneficiaries(),
   });
 
   // ── Mutations ─────────────────────────────────────────────────────────────
   const createM = useMutation({
-    mutationFn: (data) => base44.entities.Marketer.create(data),
+    mutationFn: (data) => MarketerService.create(data),
     onSuccess: () => { qc.invalidateQueries(["marketers"]); toast({ title: "تمت إضافة المسوّق بنجاح" }); },
   });
 
   const updateM = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.Marketer.update(id, data),
+    mutationFn: ({ id, data }) => MarketerService.update(id, data),
     onSuccess: () => { qc.invalidateQueries(["marketers"]); toast({ title: "تم تحديث بيانات المسوّق" }); },
   });
 
   const deleteM = useMutation({
-    mutationFn: (id) => base44.entities.Marketer.delete(id),
+    mutationFn: (id) => MarketerService.delete(id),
     onSuccess: () => { qc.invalidateQueries(["marketers"]); setDeleteTarget(null); setSelected(null); toast({ title: "تم حذف المسوّق" }); },
   });
 

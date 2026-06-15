@@ -80,6 +80,9 @@ const Base44Adapter = {
     async getMe() {
       return base44.auth.me();
     },
+    async update(id, data) {
+      return base44.entities.User.update(id, data);
+    },
     async updateMe(data) {
       return base44.auth.updateMe(data);
     },
@@ -88,10 +91,29 @@ const Base44Adapter = {
     },
   },
 
+  /* ── Dynamic entity access (for generic dialogs like ImportDialog) ── */
+  async entityBulkCreate(entityName, rows) {
+    return base44.entities[entityName].bulkCreate(rows);
+  },
+  async entityCreate(entityName, data) {
+    return base44.entities[entityName].create(data);
+  },
+
+  /* ── Upload (non-entity) ───────────────────── */
+  async uploadFile(file) {
+    return base44.integrations.Core.UploadFile({ file });
+  },
+
   /* ── Auth ─────────────────────────────────── */
   auth: {
+    async me() {
+      return base44.auth.me();
+    },
     async isAuthenticated() {
       return base44.auth.isAuthenticated();
+    },
+    async updateMe(data) {
+      return base44.auth.updateMe(data);
     },
     logout(redirectUrl) {
       base44.auth.logout(redirectUrl);
@@ -99,13 +121,13 @@ const Base44Adapter = {
     redirectToLogin(nextUrl) {
       base44.auth.redirectToLogin(nextUrl);
     },
+    async resetPasswordRequest(email) {
+      return base44.auth.resetPasswordRequest(email);
+    },
   },
 
   /* ── Integrations ─────────────────────────── */
   integrations: {
-    async uploadFile(file) {
-      return base44.integrations.Core.UploadFile({ file });
-    },
     async invokeLLM(params) {
       return base44.integrations.Core.InvokeLLM(params);
     },

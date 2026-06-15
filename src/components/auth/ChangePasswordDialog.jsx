@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import Base44Adapter from "@/adapters/Base44Adapter";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,7 +32,7 @@ export default function ChangePasswordDialog({ open, onClose }) {
       // Re-login to verify current password, then request a reset link
       // Since direct "change password while logged in" isn't exposed in SDK,
       // we use a forgot-password flow for simplicity.
-      await base44.auth.resetPasswordRequest(undefined); // no-op placeholder
+      await Base44Adapter.auth.resetPasswordRequest(undefined);
       setDone(true);
     } catch (err) {
       setError(err.message || "فشل تغيير كلمة المرور");

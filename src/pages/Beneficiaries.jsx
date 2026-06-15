@@ -4,7 +4,7 @@ import PaginationBar from "@/components/shared/PaginationBar";
 import { paginate, DEFAULT_PAGE_SIZE } from "@/lib/pagination";
 import { ErrorLogger } from "@/lib/errorLogger";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import BeneficiaryService from "@/services/BeneficiaryService";
 import { useAuth } from "@/lib/AuthContext";
 import { filterByNGO, assertNGOScope } from "@/lib/rbac";
 import Can from "@/components/auth/Can";
@@ -48,7 +48,7 @@ export default function Beneficiaries() {
   // ── Data ──────────────────────────────────────────────────────────────────
   const { data: rawBeneficiaries = [], isLoading } = useQuery({
     queryKey: ["beneficiaries"],
-    queryFn: () => base44.entities.Beneficiary.list("-created_date"),
+    queryFn: () => BeneficiaryService.getAll(),
   });
 
   // Apply NGO-level data isolation (RLS equivalent at app layer)
@@ -58,17 +58,17 @@ export default function Beneficiaries() {
   );
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.Beneficiary.create(data),
+    mutationFn: (data) => BeneficiaryService.create(data),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["beneficiaries"] }),
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.Beneficiary.update(id, data),
+    mutationFn: ({ id, data }) => BeneficiaryService.update(id, data),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["beneficiaries"] }),
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.Beneficiary.delete(id),
+    mutationFn: (id) => BeneficiaryService.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["beneficiaries"] }),
   });
 

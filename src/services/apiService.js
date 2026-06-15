@@ -17,7 +17,7 @@
  *    see `.env.example` at the project root.
  */
 
-import { base44 } from "@/api/base44Client";
+import Base44Adapter from "@/adapters/Base44Adapter";
 import {
   mockGrowthSeries,
   mockPrioritySeries,
@@ -40,22 +40,22 @@ import {
  * @returns {Promise<import("@/types").NGO[]>}
  */
 export async function fetchNGOs(filter = {}, sort = "-created_date", limit = 200) {
-  return base44.entities.NGO.filter(filter, sort, limit);
+  return Base44Adapter.ngo.getAll();
 }
 
 /** 🔌 SWAP POINT: `INSERT INTO ngos (...)`. @returns {Promise<import("@/types").NGO>} */
 export async function createNGO(data) {
-  return base44.entities.NGO.create(data);
+  return Base44Adapter.ngo.create(data);
 }
 
 /** 🔌 SWAP POINT: `UPDATE ngos SET ... WHERE id = ?`. */
 export async function updateNGO(id, data) {
-  return base44.entities.NGO.update(id, data);
+  return Base44Adapter.ngo.update(id, data);
 }
 
 /** 🔌 SWAP POINT: `DELETE FROM ngos WHERE id = ?`. */
 export async function deleteNGO(id) {
-  return base44.entities.NGO.delete(id);
+  return Base44Adapter.ngo.delete(id);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -70,22 +70,22 @@ export async function deleteNGO(id) {
  * @returns {Promise<import("@/types").Beneficiary[]>}
  */
 export async function fetchBeneficiaries(sort = "-created_date", limit = 500) {
-  return base44.entities.Beneficiary.list(sort, limit);
+  return Base44Adapter.beneficiary.getAll();
 }
 
 /** 🔌 SWAP POINT: `INSERT INTO beneficiaries (...)`. */
 export async function createBeneficiary(data) {
-  return base44.entities.Beneficiary.create(data);
+  return Base44Adapter.beneficiary.create(data);
 }
 
 /** 🔌 SWAP POINT: `UPDATE beneficiaries SET ... WHERE id = ?`. */
 export async function updateBeneficiary(id, data) {
-  return base44.entities.Beneficiary.update(id, data);
+  return Base44Adapter.beneficiary.update(id, data);
 }
 
 /** 🔌 SWAP POINT: `DELETE FROM beneficiaries WHERE id = ?`. */
 export async function deleteBeneficiary(id) {
-  return base44.entities.Beneficiary.delete(id);
+  return Base44Adapter.beneficiary.delete(id);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -97,22 +97,22 @@ export async function deleteBeneficiary(id) {
  * @returns {Promise<import("@/types").Marketer[]>}
  */
 export async function fetchMarketers(filter = {}, sort = "-created_date", limit = 200) {
-  return base44.entities.Marketer.filter(filter, sort, limit);
+  return Base44Adapter.marketer.getAll();
 }
 
 /** 🔌 SWAP POINT: `INSERT INTO marketers (...)`. */
 export async function createMarketer(data) {
-  return base44.entities.Marketer.create(data);
+  return Base44Adapter.marketer.create(data);
 }
 
 /** 🔌 SWAP POINT: `UPDATE marketers SET ... WHERE id = ?`. */
 export async function updateMarketer(id, data) {
-  return base44.entities.Marketer.update(id, data);
+  return Base44Adapter.marketer.update(id, data);
 }
 
 /** 🔌 SWAP POINT: `DELETE FROM marketers WHERE id = ?`. */
 export async function deleteMarketer(id) {
-  return base44.entities.Marketer.delete(id);
+  return Base44Adapter.marketer.delete(id);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
