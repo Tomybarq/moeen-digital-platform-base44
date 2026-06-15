@@ -165,8 +165,8 @@ export default function CaseWizard({ researcherName, onSuccess }) {
         </motion.div>
       </AnimatePresence>
 
-      {/* Navigation */}
-      <div className="flex items-center justify-between pt-4 border-t border-border">
+      {/* Navigation — sticky on mobile so the submit button is always reachable */}
+      <div className="flex items-center justify-between pt-4 border-t border-border sticky bottom-0 bg-card pb-2 z-10">
         <Button variant="outline" onClick={prev} disabled={step === 0} className="gap-2 cursor-pointer">
           <ChevronRight className="w-4 h-4" /> السابق
         </Button>
@@ -184,7 +184,8 @@ export default function CaseWizard({ researcherName, onSuccess }) {
             التالي <ChevronLeft className="w-4 h-4" />
           </Button>
         ) : (
-          <Button onClick={handleSubmit} disabled={submitting} className="gap-2 cursor-pointer bg-primary">
+          <Button onClick={handleSubmit} disabled={submitting}
+            className="gap-2 cursor-pointer bg-primary shadow-lg shadow-primary/20 font-semibold px-6">
             <CheckCircle2 className="w-4 h-4" />
             {submitting ? "جاري الإرسال…" : "إرسال الحالة"}
           </Button>
