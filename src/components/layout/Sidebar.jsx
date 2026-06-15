@@ -21,6 +21,7 @@ import { ROLES } from "@/lib/rbac";
 const baseNavItems = [
   { label: "لوحة التحكم",   icon: LayoutDashboard, path: "/",             roles: null },
   { label: "المنظمات",       icon: Building2,       path: "/ngos",         roles: null },
+  { label: "أداء المنظمات",  icon: BarChart3,      path: "/ngo-performance", roles: null },
   { label: "المستفيدون",     icon: Users,           path: "/beneficiaries",roles: null },
   { label: "المسوّقون",      icon: Megaphone,       path: "/marketers",    roles: [ROLES.PLATFORM_ADMIN, ROLES.NGO_MANAGER, ROLES.MARKETER] },
   { label: "مساحة الباحث",  icon: ClipboardPlus,   path: "/researcher",   roles: [ROLES.RESEARCHER, ROLES.PLATFORM_ADMIN, ROLES.NGO_MANAGER] },

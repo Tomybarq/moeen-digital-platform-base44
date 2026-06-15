@@ -18,6 +18,7 @@ import ResetPassword from "@/pages/ResetPassword";
 // App pages
 import Dashboard from "@/pages/Dashboard";
 import NGOs from "@/pages/NGOs";
+import NGOPerformance from "@/pages/NGOPerformance";
 import Beneficiaries from "@/pages/Beneficiaries";
 import Marketers from "@/pages/Marketers";
 import Profile from "@/pages/Profile";
@@ -67,6 +68,7 @@ const AuthenticatedApp = () => {
         <Route element={<AppLayout />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/ngos" element={<NGOs />} />
+          <Route path="/ngo-performance" element={<NGOPerformance />} />
           <Route path="/beneficiaries" element={<Beneficiaries />} />
           <Route path="/marketers" element={<Marketers />} />
           <Route path="/profile" element={<Profile />} />
