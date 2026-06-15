@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { Building2, Users, TrendingUp, Target, Activity, BarChart3, PieChart } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart as RPieChart, Pie, Cell } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart as RPieChart, Pie, Cell, LabelList } from "recharts";
 import NGOService from "@/services/NGOService";
 import BeneficiaryService from "@/services/BeneficiaryService";
 import MarketerService from "@/services/MarketerService";
@@ -161,13 +161,52 @@ export default function NGOPerformance() {
               {topBarData.length === 0 ? (
                 <p className="text-muted-foreground text-sm text-center py-12">لا توجد بيانات كافية</p>
               ) : (
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={topBarData} layout="vertical" margin={{ left: 20, right: 20 }}>
-                    <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                    <XAxis type="number" />
-                    <YAxis type="category" dataKey="name" width={100} tick={{ fontSize: 12 }} />
-                    <Tooltip formatter={(v) => [v, "مستفيد"]} />
-                    <Bar dataKey="المستفيدون" fill="#00A651" radius={[0, 8, 8, 0]} />
+                <ResponsiveContainer width="100%" height={360}>
+                  <BarChart data={topBarData} margin={{ top: 10, left: 5, right: 10, bottom: 5 }}>
+                    <defs>
+                      <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#00A651" stopOpacity={0.95} />
+                        <stop offset="100%" stopColor="#008a43" stopOpacity={0.7} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.4} vertical={false} />
+                    <XAxis
+                      dataKey="name"
+                      tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                      axisLine={{ stroke: "hsl(var(--border))" }}
+                      tickLine={false}
+                      interval={0}
+                      angle={-25}
+                      textAnchor="end"
+                      height={70}
+                    />
+                    <YAxis
+                      tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                      axisLine={false}
+                      tickLine={false}
+                      allowDecimals={false}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        borderRadius: "12px",
+                        border: "1px solid hsl(var(--border))",
+                        background: "hsl(var(--card))",
+                        boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+                        fontSize: "13px",
+                        direction: "rtl",
+                        textAlign: "right",
+                      }}
+                      formatter={(v) => [`${v} مستفيد`, "العدد"]}
+                      labelFormatter={(name) => `منظمة: ${name}`}
+                    />
+                    <Bar dataKey="المستفيدون" fill="url(#barGradient)" radius={[8, 8, 0, 0]} maxBarSize={50}>
+                      <LabelList
+                        dataKey="المستفيدون"
+                        position="top"
+                        style={{ fontSize: 11, fontWeight: 700, fill: "hsl(var(--foreground))" }}
+                        formatter={(v) => v > 0 ? v : ""}
+                      />
+                    </Bar>
                   </BarChart>
                 </ResponsiveContainer>
               )}
