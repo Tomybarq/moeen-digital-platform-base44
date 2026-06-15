@@ -51,19 +51,7 @@
     "title"
   ],
   "rls": {
-    "create": {
-      "user_condition": {
-        "role": {
-          "$in": [
-            "platform_admin",
-            "pdo",
-            "ngo_manager",
-            "marketer",
-            "researcher"
-          ]
-        }
-      }
-    },
+    "create": true,
     "read": {
       "$or": [
         {
