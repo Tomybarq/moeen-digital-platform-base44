@@ -186,7 +186,7 @@ Contributions are welcome! Please follow these steps:
 
 ## 📄 License
 
-This project is proprietary software owned by **Mueen Digital (مؤسسة معين الرقمية)**.
+This project is proprietary software owned by **Moeen Digital (مؤسسة معين الرقمية)**.
 All rights reserved © 2026.
 
 ---
@@ -194,11 +194,11 @@ All rights reserved © 2026.
 ## 📞 Contact
 
 **Developer:** Mohamed Talal Munibari
-**Role:** Technology & Development Manager
+**Role:** Technology & Development Director
 **Organization:** Ghazara for Trade & Marketing
 **Email:** tech@ghazara.net
 
-**Platform Owner:** Mueen Digital Institution
+**Platform Owner:** Moeen Digital & Commercials 
 **Contact:** info@tamkeen.sa
 
 ---
