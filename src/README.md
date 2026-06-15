@@ -818,6 +818,129 @@ Deno.serve(async (req) => {
 
 ---
 
+## 🏢 Multi-Tenant Architecture
+
+The Mo'een platform is fully multi-tenant. Each NGO operates as an independent
+**tenant** with complete data isolation, while sharing the same infrastructure.
+
+### Tenant Model
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                    SHARED INFRASTRUCTURE                       │
+│                                                              │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐    │
+│  │  NGO #1  │  │  NGO #2  │  │  NGO #3  │  │  NGO #4  │    │
+│  │ (Tenant) │  │ (Tenant) │  │ (Tenant) │  │ (Tenant) │    │
+│  │          │  │          │  │          │  │          │    │
+│  │ مستفيدين │  │ مستفيدين │  │ مستفيدين │  │ مستفيدين │    │
+│  │ مسوّقين   │  │ مسوّقين   │  │ مسوّقين   │  │ مسوّقين   │    │
+│  │ مستخدمين │  │ مستخدمين │  │ مستخدمين │  │ مستخدمين │    │
+│  │ سجل تدقيق│  │ سجل تدقيق│  │ سجل تدقيق│  │ سجل تدقيق│    │
+│  └──────────┘  └──────────┘  └──────────┘  └──────────┘    │
+│                                                              │
+│              RLS Enforcement Layer (per-row)                   │
+│              Single Database — Shared Schema                  │
+└──────────────────────────────────────────────────────────────┘
+```
+
+### Data Isolation Strategy
+
+The platform uses **Row-Level Security (RLS)** with a shared-database,
+shared-schema approach. Every data record carries a tenant identifier:
+
+| Entity | Tenant Column | Isolation Rule |
+|--------|:---:|--------|
+| `NGO` | `id` (self) | The NGO entity IS the tenant registry |
+| `Beneficiary` | `ngo_id` | Scoped to creating NGO |
+| `Marketer` | `ngo_id` | Scoped to associated NGO |
+| `User` | `ngo_id` | Linked to a specific NGO |
+| `AuditLog` | `associationId` | Scoped to the acting user's NGO |
+| `Notification` | `associationId` | Scoped to the recipient's NGO |
+
+### Tenant-Aware Data Access
+
+```javascript
+// Admin/PDO — view data for a specific tenant
+const beneficiaries = await apiService.fetchTenantBeneficiaries("ngo-id-123");
+
+// NGO-scoped user — RLS automatically filters to their own NGO
+const beneficiaries = await apiService.fetchBeneficiaries();
+// ← backend returns only records matching user.ngo_id
+```
+
+### Tenant Context Provider
+
+The `TenantContext` React provider manages active tenant state:
+
+```javascript
+import { useTenant } from "@/context/TenantContext";
+
+const { activeTenantId, tenants, setActiveTenant, canSwitchTenant } = useTenant();
+```
+
+- **platform_admin / pdo**: Can switch between all tenants via `TenantSwitcher` dropdown
+- **ngo_manager / marketer / researcher**: Locked to their own NGO automatically
+- Active tenant is persisted in `localStorage`
+
+### Tenant Switching UI
+
+The `TenantSwitcher` component appears in the top bar for multi-tenant users,
+allowing them to filter the entire platform view by a specific NGO.
+
+### Security Verification
+
+```http
+POST /api/functions/verifyTenantIsolation
+Authorization: Bearer <admin_or_pdo_token>
+
+# Optional: verify specific tenants
+{ "tenant_ids": ["ngo-id-1", "ngo-id-2"] }
+
+# Or verify all
+{}
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "overall_status": "PASS",
+  "total_tenants_verified": 5,
+  "tenants_passed": 5,
+  "tenants_failed": 0,
+  "results": [
+    {
+      "tenant_id": "6a2acef4dbe74042c48129ec",
+      "tenant_name": "جمعية البر الخيرية",
+      "status": "pass",
+      "checks": {
+        "beneficiaries": { "total": 120, "cross_tenant_leaks": 0, "pass": true },
+        "marketers":    { "total": 5,   "cross_tenant_leaks": 0, "pass": true },
+        "users":        { "total": 3,   "cross_tenant_leaks": 0, "pass": true },
+        "audit_logs":   { "total": 45,  "cross_tenant_leaks": 0, "pass": true }
+      }
+    }
+  ]
+}
+```
+
+> Run `verifyTenantIsolation` periodically (e.g., via scheduled automation) to
+> detect any data leakage between tenants.
+
+### Tenant Lifecycle
+
+| Operation | Endpoint | Roles |
+|-----------|----------|-------|
+| Create tenant (NGO) | `POST /api/entities/NGO` | platform_admin |
+| Update tenant | `PATCH /api/entities/NGO/{id}` | platform_admin |
+| Archive tenant | `PATCH /api/entities/NGO/{id}` → `status: "archived"` | platform_admin |
+| Delete tenant | `DELETE /api/entities/NGO/{id}` | platform_admin |
+| Verify isolation | `POST /api/functions/verifyTenantIsolation` | platform_admin, pdo |
+
+---
+
 ## 👥 The 5 User Roles (RBAC)
 
 | Role | Key | Access |

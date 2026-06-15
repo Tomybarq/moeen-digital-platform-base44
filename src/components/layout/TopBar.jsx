@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import RoleBadge from "@/components/auth/RoleBadge";
 import NotificationCenter from "@/components/layout/NotificationCenter";
+import TenantSwitcher from "@/components/tenant/TenantSwitcher";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -65,6 +66,9 @@ export default function TopBar({ onMenuToggle, pageTitle }) {
 
       {/* Right: actions */}
       <div className="flex items-center gap-1">
+        {/* Tenant Switcher (admin/PDO only) */}
+        <TenantSwitcher theme={theme} />
+
         {/* Notifications */}
         <NotificationCenter />
 

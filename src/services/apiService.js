@@ -163,3 +163,45 @@ export async function generateReport(reportType, filters = {}, format = "json") 
     format,
   });
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  Multi-Tenant — Tenant-aware data access
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Fetch data scoped to a specific tenant (NGO).
+ * RLS already enforces server-side isolation — this is for admin/PDO views
+ * where they explicitly filter by tenant.
+ */
+export async function fetchTenantBeneficiaries(tenantId, params = {}) {
+  const { base44 } = await import("@/api/base44Client");
+  const query = { ...params, ngo_id: tenantId };
+  return base44.entities.Beneficiary.filter(query, "-created_date", 500, 0) ?? [];
+}
+
+export async function fetchTenantMarketers(tenantId, params = {}) {
+  const { base44 } = await import("@/api/base44Client");
+  const query = { ...params, ngo_id: tenantId };
+  return base44.entities.Marketer.filter(query, "-created_date", 500, 0) ?? [];
+}
+
+export async function fetchTenantUsers(tenantId, params = {}) {
+  const { base44 } = await import("@/api/base44Client");
+  const query = { ...params, ngo_id: tenantId };
+  return base44.entities.User.filter(query, "", 200, 0) ?? [];
+}
+
+export async function fetchTenantAuditLogs(tenantId, params = {}) {
+  const { base44 } = await import("@/api/base44Client");
+  const query = { ...params, associationId: tenantId };
+  return base44.entities.AuditLog.filter(query, "-created_date", 200, 0) ?? [];
+}
+
+/**
+ * Verify tenant data isolation (security test).
+ * Only accessible by platform_admin and pdo.
+ */
+export async function verifyTenantIsolation(tenantIds = []) {
+  const { base44 } = await import("@/api/base44Client");
+  return base44.functions.invoke("verifyTenantIsolation", { tenant_ids: tenantIds });
+}

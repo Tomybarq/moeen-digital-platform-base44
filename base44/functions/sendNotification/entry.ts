@@ -131,6 +131,7 @@ Deno.serve(async (req) => {
     for (const uid of userIds) {
       const entry = {
         user_id: uid,
+        associationId: user.ngo_id || user.data?.ngo_id || null,
         type,
         title,
         message,

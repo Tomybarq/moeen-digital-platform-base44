@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from "@/lib/AuthContext";
 import UserNotRegisteredError from "@/components/UserNotRegisteredError";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { TenantProvider } from "@/context/TenantContext";
 
 // Auth pages
 import Login from "@/pages/Login";
@@ -91,12 +92,14 @@ function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <QueryClientProvider client={queryClientInstance}>
-          <Router>
-            <AuthenticatedApp />
-          </Router>
-          <Toaster />
-        </QueryClientProvider>
+        <TenantProvider>
+          <QueryClientProvider client={queryClientInstance}>
+            <Router>
+              <AuthenticatedApp />
+            </Router>
+            <Toaster />
+          </QueryClientProvider>
+        </TenantProvider>
       </AuthProvider>
     </ThemeProvider>
   );

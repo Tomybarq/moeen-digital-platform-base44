@@ -1,23 +1,34 @@
 import { useState } from "react";
 import { authResetPasswordRequest } from "@/services/apiService";
+import { useAuth } from "@/lib/AuthContext";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Lock, Loader2, Eye, EyeOff, CheckCircle2 } from "lucide-react";
 
+function extractErrorMessage(err) {
+  if (!err) return "حدث خطأ غير معروف";
+  if (typeof err === "string") return err;
+  if (err.data?.error) return err.data.error;
+  if (err.message && typeof err.message === "string" && err.message !== "[object Object]") return err.message;
+  if (err.error && typeof err.error === "string") return err.error;
+  if (err.status && err.statusText) return `${err.status} ${err.statusText}`;
+  return "فشل تغيير كلمة المرور";
+}
+
 export default function ChangePasswordDialog({ open, onClose }) {
-  const [current, setCurrent]     = useState("");
+  const { user } = useAuth();
   const [next, setNext]           = useState("");
   const [confirm, setConfirm]     = useState("");
-  const [showCurrent, setShowC]   = useState(false);
   const [showNext, setShowN]      = useState(false);
+  const [showConfirm, setShowC]   = useState(false);
   const [error, setError]         = useState("");
   const [loading, setLoading]     = useState(false);
   const [done, setDone]           = useState(false);
 
   const reset = () => {
-    setCurrent(""); setNext(""); setConfirm("");
+    setNext(""); setConfirm("");
     setError(""); setDone(false); setLoading(false);
     onClose();
   };
@@ -27,15 +38,16 @@ export default function ChangePasswordDialog({ open, onClose }) {
     setError("");
     if (next !== confirm) { setError("كلمتا المرور غير متطابقتين"); return; }
     if (next.length < 8)  { setError("يجب أن تكون 8 أحرف على الأقل"); return; }
+
+    const email = user?.email;
+    if (!email) { setError("تعذر العثور على بريدك الإلكتروني"); return; }
+
     setLoading(true);
     try {
-      // Re-login to verify current password, then request a reset link
-      // Since direct "change password while logged in" isn't exposed in SDK,
-      // we use a forgot-password flow for simplicity.
-      await authResetPasswordRequest(undefined);
+      await authResetPasswordRequest(email);
       setDone(true);
     } catch (err) {
-      setError(err.message || "فشل تغيير كلمة المرور");
+      setError(extractErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -84,12 +96,12 @@ export default function ChangePasswordDialog({ open, onClose }) {
               <Label htmlFor="cp-confirm">تأكيد كلمة المرور</Label>
               <div className="relative">
                 <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-                <Input id="cp-confirm" type={showCurrent ? "text" : "password"}
+                <Input id="cp-confirm" type={showConfirm ? "text" : "password"}
                   value={confirm} onChange={(e) => setConfirm(e.target.value)}
                   placeholder="••••••••" className="pr-10 pl-10 h-11" required />
-                <button type="button" tabIndex={-1} onClick={() => setShowC(!showCurrent)}
+                <button type="button" tabIndex={-1} onClick={() => setShowC(!showConfirm)}
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer">
-                  {showCurrent ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
               {confirm && next !== confirm && (
