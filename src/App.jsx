@@ -26,6 +26,7 @@ import ResearcherWorkspace from "@/pages/ResearcherWorkspace";
 import BeneficiaryDetail from "@/pages/BeneficiaryDetail";
 import Forbidden from "@/pages/Forbidden";
 import TechnicalOverview from "@/pages/TechnicalOverview";
+import AuditLogs from "@/pages/AuditLogs";
 
 // Layout
 import AppLayout from "@/components/layout/AppLayout";
@@ -67,6 +68,7 @@ const AuthenticatedApp = () => {
           <Route path="/beneficiaries" element={<Beneficiaries />} />
           <Route path="/marketers" element={<Marketers />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/audit-logs" element={<AuditLogs />} />
           <Route path="/settings" element={<PlatformSettings />} />
           <Route path="/users" element={<UsersManagement />} />
           <Route path="/researcher" element={<ResearcherWorkspace />} />

@@ -10,6 +10,7 @@ import {
   ChevronRight,
   ShieldCheck,
   ClipboardPlus,
+  ScrollText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -25,6 +26,7 @@ const baseNavItems = [
 ];
 
 const bottomNavItems = [
+  { label: "سجل التدقيق",       icon: ScrollText,   path: "/audit-logs", roles: [ROLES.PLATFORM_ADMIN, ROLES.PDO, ROLES.NGO_MANAGER] },
   { label: "إدارة المستخدمين", icon: ShieldCheck,  path: "/users",    roles: [ROLES.PLATFORM_ADMIN] },
   { label: "إعدادات المنصة",   icon: Settings,     path: "/settings", roles: [ROLES.PLATFORM_ADMIN] },
   { label: "الملف الشخصي",     icon: UserCircle,   path: "/profile",  roles: null },

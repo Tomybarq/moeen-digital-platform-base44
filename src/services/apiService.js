@@ -25,7 +25,6 @@ import {
   mockPrioritySeries,
   mockStatusDistribution,
   mockNgos,
-  mockAuditLogs,
 } from "@/lib/mockData";
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -139,4 +138,8 @@ export async function fetchGrowthSeries()       { return Promise.resolve(mockGro
 export async function fetchPrioritySeries()     { return Promise.resolve(mockPrioritySeries); }
 export async function fetchStatusDistribution() { return Promise.resolve(mockStatusDistribution); }
 export async function fetchTopNGOs()            { return Promise.resolve(mockNgos); }
-export async function fetchAuditLogs()          { return Promise.resolve(mockAuditLogs); }
+// ── AuditLog ───────────────────────────────────────────────────────────
+export async function fetchAuditLogs(params)       { return Base44Adapter.auditLog.getAll(params); }
+export async function createAuditLog(data)         { return Base44Adapter.auditLog.create(data); }
+export async function getAuditLogById(id)          { return Base44Adapter.auditLog.getById(id); }
+export async function fetchAllAuditLogs(params)    { return Base44Adapter.auditLog.exportAll(params); }

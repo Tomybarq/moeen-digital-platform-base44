@@ -176,6 +176,104 @@ national ID `^[12]\d{9}$`) — mirror them server-side.
 **Access control:** per-NGO data isolation and role permissions
 (`src/lib/rbac.js`) should be re-implemented server-side; the frontend checks are UX-only.
 
+## 🔍 Audit Logs — Immutable Activity Tracking
+
+Every critical action on the platform is recorded immutably with full context.
+The audit trail supports compliance with SDAIA and PDPL regulatory requirements.
+
+### Event Types
+
+| Event | Description |
+|-------|-------------|
+| `CREATE` | Record creation (NGO, Beneficiary, Marketer, User) |
+| `UPDATE` | Record modification |
+| `DELETE` | Record deletion |
+| `BULK_IMPORT` | Bulk CSV/Excel import operations |
+| `BULK_EXPORT` | Data export (CSV/PDF) |
+| `LOGIN_SUCCESS` | Successful login |
+| `LOGIN_FAILURE` | Failed login attempt |
+| `ROLE_CHANGE` | User role modification |
+| `PERMISSION_CHANGE` | Permission changes |
+| `ARCHIVE` | Record archival |
+| `UNARCHIVE` | Record unarchival |
+
+### Data Structure
+
+Each audit log entry contains:
+- `event_type` — Type of event
+- `user_id` — ID of the acting user
+- `user_role` — Role of the user at event time
+- `resource_type` — Affected resource (NGO, Beneficiary, Marketer, User, Platform, Auth)
+- `resource_id` — Affected resource ID
+- `resource_label` — Human-readable resource name
+- `associationId` — NGO ID for data isolation
+- `timestamp` — ISO 8601 with milliseconds (auto-generated)
+- `details` — JSON object with change context (sensitive data redacted)
+- `ip_address` — Client IP (optional)
+- `user_agent` — Client browser/device (optional)
+
+### Immutability
+
+- **Audit log entries are immutable** — enforced at the database level via RLS.
+- `UPDATE` and `DELETE` operations are disabled for all roles.
+- Once written, a log entry can never be modified or removed.
+
+### Data Isolation
+
+Logs are scoped by `associationId` (NGO ID):
+
+| Role | Sees |
+|------|------|
+| `platform_admin`, `pdo` | All logs across all NGOs |
+| `ngo_manager`, `marketer` | Only logs from their own NGO |
+| `researcher` | Only their own activity logs |
+
+### Sensitive Data Protection
+
+- Raw personal data (national ID, phone, email, password) is **never** stored in `details`.
+- Instead, metadata like `{ action: "updated_national_id" }` is logged.
+- The `sanitiseDetails` function strips sensitive fields before write.
+
+### Search & Filtering
+
+The audit log page (`/audit-logs`) provides:
+- Filter by event type, resource type
+- Free-text search across user IDs and resource labels
+- Pagination (50 records per page)
+- Click-to-view detail dialog with full JSON context
+
+### Export
+
+- **CSV** and **PDF** export supported
+- **Preview before export** — modal showing first 15 records with column selection
+- Export respects current filters
+
+### Data Retention
+
+- Active logs retained for a **minimum of 6 months**.
+- Long-term archival/deletion policy: logs older than 6 months may be archived to cold storage (future enhancement).
+
+### Database Indexes
+
+Entity fields are indexed by Base44. The following query patterns are optimised:
+- `(associationId, created_date DESC)` — NGO-scoped chronological views
+- `(event_type, created_date DESC)` — Filter by event type
+- `(user_id, created_date DESC)` — User-specific activity trails
+- `(resource_type, resource_id, created_date DESC)` — Resource-specific change tracking
+
+### Backend Function
+
+`functions/logAudit.js` — single writer for all audit events:
+- Called by entity automations on CRUD operations
+- Called by frontend for auth/permission/export events
+- Validates and sanitises all input before write
+
+### Audit Log Page
+
+Accessible at `/audit-logs` by: Platform Admin, PDO, NGO Manager.
+
+---
+
 ## 🛠 Tech Stack
 
 React 18 · Vite · Tailwind CSS · shadcn/ui (Radix) · Framer Motion · Recharts ·

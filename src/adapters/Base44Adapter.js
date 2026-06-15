@@ -71,6 +71,34 @@ const Base44Adapter = {
     },
   },
 
+  /* ── AuditLog ─────────────────────────────── */
+  auditLog: {
+    async create(data) {
+      return base44.functions.invoke("logAudit", data);
+    },
+    async getAll(params = {}) {
+      const { sort = "-created_date", limit = 100, skip = 0, query = {} } = params;
+      const result = await base44.entities.AuditLog.filter(query, sort, limit, skip);
+      return result ?? [];
+    },
+    async getById(id) {
+      return base44.entities.AuditLog.get(id);
+    },
+    async exportAll(params = {}) {
+      const { query = {}, sort = "-created_date" } = params;
+      const results = [];
+      let skip = 0;
+      const limit = 500;
+      let batch;
+      do {
+        batch = await base44.entities.AuditLog.filter(query, sort, limit, skip);
+        results.push(...batch);
+        skip += limit;
+      } while (batch.length === limit);
+      return results;
+    },
+  },
+
   /* ── User ─────────────────────────────────── */
   user: {
     async getAll() {
