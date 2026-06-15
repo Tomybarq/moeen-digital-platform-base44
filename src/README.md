@@ -2,7 +2,9 @@
 
 A role-based digital platform for Saudi non-profit organizations (NGOs) to register,
 manage, and support beneficiary cases — built with React, Tailwind CSS, and a
-fully decoupled data-service layer ready for SQL / Firebase integration.
+fully decoupled data-service layer ready for any backend.
+
+**Built by [Mohamed Munibari](https://tomybarq.com) / Tomybarq**
 
 ---
 
@@ -20,10 +22,7 @@ fully decoupled data-service layer ready for SQL / Firebase integration.
 # 1. Install dependencies
 npm install
 
-# 2. Configure environment
-cp .env.example .env   # then fill in your Firebase / API credentials
-
-# 3. Run the dev server
+# 2. Run the dev server
 npm run dev
 ```
 
@@ -57,21 +56,24 @@ src/
 └── lib/            # rbac.js · schemas.js (Zod) · mockData.js · AuthContext
 ```
 
-## 🔌 Instructions for the Backend Engineer
+## 🔌 Architecture — Backend-Agnostic Data Layer
 
-1. **Single integration point:** all UI data access goes through
-   `src/services/apiService.js`. Every function is `async` and documented with a
-   `🔌 SWAP POINT` comment containing the equivalent SQL query — replace the body,
-   keep the return shape.
-2. **Data contracts:** field names in `src/types/index.js` map 1:1 to the SQL
-   column names (`full_name`, `ngo_id`, `case_type`, …). Required fields are marked.
-3. **Validation parity:** frontend rules live in `src/lib/schemas.js`
-   (Saudi phone `^05\d{8}$`, national ID `^[12]\d{9}$`, file limits 5 MB CSV / 10 MB docs) —
-   mirror them server-side.
-4. **Access control:** per-NGO data isolation and role permissions
-   (`src/lib/rbac.js`) must be re-implemented server-side; the frontend checks are UX-only.
-5. **Configuration:** secrets and endpoints come from environment variables —
-   see `.env.example` (Firebase config + `VITE_API_BASE_URL`).
+All UI data access flows through `src/services/` → `src/adapters/` → backend.
+To swap backends, replace only the adapter — services and pages stay untouched.
+
+```
+Page → Service → Adapter → Backend
+```
+
+- `src/config.js` — set `DATA_PROVIDER` (`base44` | `supabase` | `firebase` | `api`)
+- `src/adapters/` — one adapter per backend provider
+- `src/services/` — domain services (NGOService, BeneficiaryService, etc.)
+
+**Validation:** frontend rules in `src/lib/schemas.js` (Saudi phone `^05\d{8}$`,
+national ID `^[12]\d{9}$`) — mirror them server-side.
+
+**Access control:** per-NGO data isolation and role permissions
+(`src/lib/rbac.js`) should be re-implemented server-side; the frontend checks are UX-only.
 
 ## 🛠 Tech Stack
 
