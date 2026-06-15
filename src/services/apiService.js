@@ -143,3 +143,10 @@ export async function fetchAuditLogs(params)       { return Base44Adapter.auditL
 export async function createAuditLog(data)         { return Base44Adapter.auditLog.create(data); }
 export async function getAuditLogById(id)          { return Base44Adapter.auditLog.getById(id); }
 export async function fetchAllAuditLogs(params)    { return Base44Adapter.auditLog.exportAll(params); }
+
+// ── Notification ─────────────────────────────────────────────────────────
+export async function fetchNotifications(params)       { return Base44Adapter.notification.getAll(params); }
+export async function createNotification(data)         { return Base44Adapter.notification.create(data); }
+export async function markNotificationRead(id)          { return Base44Adapter.notification.markRead(id); }
+export async function markAllNotificationsRead()        { return Base44Adapter.notification.markAllRead(); }
+export async function deleteNotification(id)            { return Base44Adapter.notification.delete(id); }

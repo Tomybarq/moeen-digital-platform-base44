@@ -99,6 +99,29 @@ const Base44Adapter = {
     },
   },
 
+  /* ── Notification ─────────────────────────── */
+  notification: {
+    async getAll({ skip = 0, limit = 50, sort = "-created_date", query = {} } = {}) {
+      const result = await base44.entities.Notification.filter(query, sort, limit, skip);
+      return result ?? [];
+    },
+    async create(data) {
+      return base44.entities.Notification.create(data);
+    },
+    async markRead(id) {
+      return base44.entities.Notification.update(id, { is_read: true });
+    },
+    async markAllRead() {
+      const unread = await base44.entities.Notification.filter({ is_read: false }, "-created_date", 500, 0);
+      for (const notification of unread) {
+        await base44.entities.Notification.update(notification.id, { is_read: true });
+      }
+    },
+    async delete(id) {
+      return base44.entities.Notification.delete(id);
+    },
+  },
+
   /* ── User ─────────────────────────────────── */
   user: {
     async getAll() {

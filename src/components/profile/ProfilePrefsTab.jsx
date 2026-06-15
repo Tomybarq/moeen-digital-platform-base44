@@ -5,24 +5,51 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { Settings, Bell, Globe, Moon, Sun, Save, Loader2, CheckCircle2 } from "lucide-react";
+import { Settings, Bell, Globe, Moon, Sun, Save, Loader2, CheckCircle2, RotateCcw, Shield } from "lucide-react";
 import { useTheme } from "@/components/ThemeProvider";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
+
+const NOTIFICATION_TYPES = [
+  { id: "case_update",   label: "تحديثات الحالات",       desc: "تغييرات حالة المستفيدين",              icon: "🔄" },
+  { id: "task_assigned", label: "المهام الجديدة",         desc: "عند إسناد مهمة إليك",                 icon: "📋" },
+  { id: "message",       label: "الرسائل",                desc: "رسائل من أعضاء الفريق",               icon: "💬" },
+  { id: "system_alert",  label: "تنبيهات النظام",         desc: "إشعارات إدارية وتحديثات المنصة",      icon: "⚠️" },
+  { id: "import_complete", label: "اكتمال الاستيراد",     desc: "عند انتهاء عمليات استيراد البيانات",  icon: "📥" },
+  { id: "status_change", label: "تغييرات الحالة",         desc: "تغييرات حالة السجلات العامة",         icon: "🔀" },
+  { id: "role_change",   label: "تغييرات الصلاحيات",      desc: "عند تعديل صلاحيات المستخدمين",        icon: "🔐" },
+];
+
+const DEFAULT_PREFS = Object.fromEntries(NOTIFICATION_TYPES.map(t => [t.id, true]));
 
 export default function ProfilePrefsTab() {
   const { user } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
+  const prefs = user?.notification_prefs || DEFAULT_PREFS;
+
   const [notifEmail, setNotifEmail]   = useState(user?.notif_email ?? true);
   const [notifSystem, setNotifSystem] = useState(user?.notif_system ?? true);
+  const [notifPrefs, setNotifPrefs]   = useState(prefs);
   const [saving, setSaving]           = useState(false);
   const [saved, setSaved]             = useState(false);
+
+  const togglePref = (typeId) => {
+    setNotifPrefs(prev => ({ ...prev, [typeId]: !prev[typeId] }));
+  };
+
+  const resetPrefs = () => {
+    setNotifPrefs(DEFAULT_PREFS);
+  };
 
   const handleSave = async () => {
     setSaving(true); setSaved(false);
     try {
-      await base44.auth.updateMe({ notif_email: notifEmail, notif_system: notifSystem });
+      await base44.auth.updateMe({
+        notif_email: notifEmail,
+        notif_system: notifSystem,
+        notification_prefs: notifPrefs,
+      });
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } finally { setSaving(false); }
@@ -43,6 +70,46 @@ export default function ProfilePrefsTab() {
       </CardHeader>
       <Separator />
       <CardContent className="p-6 space-y-6">
+
+        {/* Notification Types */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-semibold text-foreground flex items-center gap-2">
+              <Shield className="w-4 h-4 text-primary" /> أنواع الإشعارات
+            </p>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-xs text-muted-foreground cursor-pointer"
+              onClick={resetPrefs}
+            >
+              <RotateCcw className="w-3 h-3 ml-1" />
+              إعادة التعيين
+            </Button>
+          </div>
+          <div className="space-y-1.5">
+            {NOTIFICATION_TYPES.map(item => (
+              <div key={item.id}
+                className="flex items-center justify-between p-2.5 rounded-lg border border-border hover:bg-muted/30 transition-colors">
+                <div className="flex items-center gap-3">
+                  <span className="text-lg">{item.icon}</span>
+                  <div>
+                    <p className="text-sm font-medium">{item.label}</p>
+                    <p className="text-xs text-muted-foreground">{item.desc}</p>
+                  </div>
+                </div>
+                <Switch
+                  checked={notifPrefs[item.id] ?? true}
+                  onCheckedChange={() => togglePref(item.id)}
+                  className="cursor-pointer"
+                  dir="ltr"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <Separator />
 
         {/* Appearance */}
         <div className="space-y-3">

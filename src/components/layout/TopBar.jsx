@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { Sun, Moon, Menu, Bell, LogOut, UserCircle } from "lucide-react";
+import { Sun, Moon, Menu, LogOut, UserCircle } from "lucide-react";
 import { useTheme } from "@/components/ThemeProvider";
 import { useAuth } from "@/lib/AuthContext";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import RoleBadge from "@/components/auth/RoleBadge";
+import NotificationCenter from "@/components/layout/NotificationCenter";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -65,19 +66,7 @@ export default function TopBar({ onMenuToggle, pageTitle }) {
       {/* Right: actions */}
       <div className="flex items-center gap-1">
         {/* Notifications */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="relative cursor-pointer"
-          aria-label="الإشعارات"
-          style={{ color: theme === "dark" ? "#00A651" : "#0c3140" }}
-        >
-          <Bell className="w-4.5 h-4.5" />
-          <span
-            className="absolute top-1.5 left-1.5 w-2 h-2 rounded-full"
-            style={{ background: "#00A651" }}
-          />
-        </Button>
+        <NotificationCenter />
 
         {/* Theme toggle */}
         <Button
