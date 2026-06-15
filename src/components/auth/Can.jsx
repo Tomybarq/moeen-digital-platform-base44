@@ -1,29 +1,17 @@
 import { useAuth } from "@/lib/AuthContext";
-import { hasPermission } from "@/lib/rbac";
+import { hasPermission, normalizeRole } from "@/lib/rbac";
 
 /**
- * Declarative RBAC guard.
+ * Declarative RBAC guard — COSMETIC ONLY.
+ *
+ * Hides/shows UI elements based on the current user's role or permissions.
+ * Does NOT enforce security — the backend entity RLS is the real gatekeeper.
  *
  * Usage:
  *   <Can role="ADMIN">...</Can>
  *   <Can roles={["ADMIN", "MANAGER"]}>...</Can>
  *   <Can permission="beneficiaries:edit">...</Can>
- *
- * The active role comes from the global AuthContext — to switch the auth
- * backend (e.g. Firebase Auth), only the AuthContext user source changes;
- * every <Can> guard keeps working untouched.
  */
-
-// Friendly aliases → internal role keys
-const ROLE_ALIASES = {
-  ADMIN: "platform_admin",
-  MANAGER: "ngo_manager",
-  RESEARCHER: "researcher",
-  MARKETER: "marketer",
-  PDO: "pdo",
-};
-
-const normalizeRole = (r) => ROLE_ALIASES[r] || r;
 
 export default function Can({ role, roles, permission, fallback = null, children }) {
   const { user } = useAuth();

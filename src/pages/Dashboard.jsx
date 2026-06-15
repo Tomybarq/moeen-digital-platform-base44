@@ -4,7 +4,7 @@ import { Building2, Users, Search, Megaphone, AlertTriangle, ShieldCheck, Sparkl
 import { useAuth } from "@/lib/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { fetchNGOs, fetchBeneficiaries, fetchMarketers } from "@/services/apiService";
-import { getRoleLabel, ROLES, filterByNGO } from "@/lib/rbac";
+import { getRoleLabel, ROLES } from "@/lib/rbac";
 
 import KPICard from "@/components/dashboard/KPICard";
 import GrowthLineChart from "@/components/dashboard/GrowthLineChart";
@@ -39,10 +39,8 @@ export default function Dashboard() {
     staleTime: 60_000
   });
 
-  const beneficiaries = useMemo(
-    () => filterByNGO(user, rawBeneficiaries),
-    [user, rawBeneficiaries]
-  );
+  // Backend entity RLS already filters data per user role/NGO scope.
+  const beneficiaries = rawBeneficiaries;
 
   const stats = useMemo(() => {
     const activeResearchers = new Set(

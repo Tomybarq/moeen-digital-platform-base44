@@ -1,17 +1,19 @@
 import { ShieldCheck, Building2, Search, Megaphone, Lock } from "lucide-react";
-import { getRoleColor, getRoleLabel } from "@/lib/rbac";
+import { getRoleColor, getRoleLabel, ROLE_ICONS } from "@/lib/rbac";
 import { cn } from "@/lib/utils";
 
-const iconMap = {
-  platform_admin: ShieldCheck,
-  ngo_manager:    Building2,
-  researcher:     Search,
-  marketer:       Megaphone,
-  pdo:            Lock,
+const ICON_COMPONENTS = {
+  ShieldCheck,
+  Building2,
+  Search,
+  Megaphone,
+  Lock,
 };
 
 export default function RoleBadge({ role, size = "default" }) {
-  const Icon = iconMap[role] ?? ShieldCheck;
+  const iconName = ROLE_ICONS[role] || "ShieldCheck";
+  const Icon = ICON_COMPONENTS[iconName] ?? ShieldCheck;
+
   return (
     <span
       className={cn(

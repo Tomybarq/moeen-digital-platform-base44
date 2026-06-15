@@ -6,7 +6,8 @@ import { ErrorLogger } from "@/lib/errorLogger";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import BeneficiaryService from "@/services/BeneficiaryService";
 import { useAuth } from "@/lib/AuthContext";
-import { filterByNGO, assertNGOScope } from "@/lib/rbac";
+// Backend entity RLS enforces data isolation server-side.
+// Frontend uses only cosmetic permission guards (Can).
 import Can from "@/components/auth/Can";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
@@ -51,11 +52,10 @@ export default function Beneficiaries() {
     queryFn: () => BeneficiaryService.getAll(),
   });
 
-  // Apply NGO-level data isolation (RLS equivalent at app layer)
-  const beneficiaries = useMemo(
-    () => filterByNGO(user, rawBeneficiaries),
-    [user, rawBeneficiaries]
-  );
+  // Backend entity RLS already filters data per user role/NGO scope.
+  // No client-side filtering needed — the list() call only returns
+  // records the current user is authorized to see.
+  const beneficiaries = rawBeneficiaries;
 
   const createMutation = useMutation({
     mutationFn: (data) => BeneficiaryService.create(data),
@@ -74,8 +74,7 @@ export default function Beneficiaries() {
 
   // ── Handlers ──────────────────────────────────────────────────────────────
   const handleSave = async (data) => {
-    // Enforce NGO scope before writing
-    assertNGOScope(user, data);
+    // Backend entity RLS enforces NGO scope server-side.
     if (editingB) await updateMutation.mutateAsync({ id: editingB.id, data });
     else await createMutation.mutateAsync(data);
   };

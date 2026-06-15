@@ -12,7 +12,8 @@ export const AuthProvider = ({ children }) => {
   const [isLoadingPublicSettings, setIsLoadingPublicSettings] = useState(true);
   const [authError, setAuthError] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
-  const [appPublicSettings, setAppPublicSettings] = useState(null); // Contains only { id, public_settings }
+  const [appPublicSettings, setAppPublicSettings] = useState(null);
+  const [permissions, setPermissions] = useState([]); // Cached from /me
 
   useEffect(() => {
     checkAppState();
@@ -100,6 +101,16 @@ export const AuthProvider = ({ children }) => {
       }
       setUser(currentUser);
       setIsAuthenticated(true);
+
+      // Fetch permissions from backend once and cache them
+      try {
+        const permsRes = await base44.functions.invoke("getUserPermissions", {});
+        setPermissions(permsRes.data?.permissions ?? []);
+      } catch {
+        // Non-critical — UI guards fall back to role-based checks
+        setPermissions([]);
+      }
+
       setIsLoadingAuth(false);
       setAuthChecked(true);
     } catch (error) {
@@ -145,6 +156,7 @@ export const AuthProvider = ({ children }) => {
       authError,
       appPublicSettings,
       authChecked,
+      permissions,
       logout,
       navigateToLogin,
       checkUserAuth,

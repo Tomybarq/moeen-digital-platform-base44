@@ -2,24 +2,18 @@ import { useState } from "react";
 import { useAuth } from "@/lib/AuthContext";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { getRoleLabel } from "@/lib/rbac";
-import { MapPin, Building2, User, Shield, Settings, ShieldCheck, Search, Megaphone } from "lucide-react";
+import { getRoleLabel, ROLE_DESCRIPTIONS, ROLE_BANNERS } from "@/lib/rbac";
+import { MapPin, Building2, User, Shield, Settings, ShieldCheck, Building2 as BuildingIcon, Search, Megaphone, Lock } from "lucide-react";
 import ProfileInfoTab from "@/components/profile/ProfileInfoTab";
 import ProfileSecurityTab from "@/components/profile/ProfileSecurityTab";
 import ProfilePrefsTab from "@/components/profile/ProfilePrefsTab";
 
-const ROLE_BANNERS = {
-  platform_admin:    { from: "#7c3aed", to: "#a78bfa", icon: ShieldCheck },
-  ngo_admin:         { from: "#1d4ed8", to: "#60a5fa", icon: Building2  },
-  social_researcher: { from: "#059669", to: "#34d399", icon: Search     },
-  marketer:          { from: "#d97706", to: "#fbbf24", icon: Megaphone  },
-};
-
-const ROLE_DESCRIPTIONS = {
-  platform_admin:    "صلاحيات كاملة على جميع أقسام المنصة",
-  ngo_admin:         "إدارة منظمة غير ربحية ومستفيديها",
-  social_researcher: "البحث والمتابعة الميدانية للمستفيدين",
-  marketer:          "إدارة الحملات التسويقية والترويجية",
+const BANNER_ICON_MAP = {
+  ShieldCheck,
+  Building2: BuildingIcon,
+  Search,
+  Megaphone,
+  Lock,
 };
 
 const TABS = [
@@ -34,7 +28,7 @@ export default function Profile() {
 
   const role   = user?.role || "platform_admin";
   const banner = ROLE_BANNERS[role] || ROLE_BANNERS.platform_admin;
-  const BIcon  = banner.icon;
+  const BannerIcon = BANNER_ICON_MAP[banner.icon] || ShieldCheck;
 
   const initials = user?.full_name?.split(" ").slice(0, 2).map(w => w[0]).join("") || "م";
 
@@ -69,7 +63,7 @@ export default function Profile() {
               <p className="text-white/70 text-sm mt-0.5 font-mono" dir="ltr">{user?.email}</p>
               <div className="flex items-center gap-2 mt-3 flex-wrap">
                 <span className="inline-flex items-center gap-1.5 bg-white/20 border border-white/30 text-white text-xs font-semibold px-3 py-1 rounded-full">
-                  <BIcon className="w-3.5 h-3.5" />
+                  <BannerIcon className="w-3.5 h-3.5" />
                   {getRoleLabel(role)}
                 </span>
                 {user?.city && (
