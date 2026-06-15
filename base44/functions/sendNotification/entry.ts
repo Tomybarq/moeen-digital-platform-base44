@@ -102,7 +102,7 @@ Deno.serve(async (req) => {
       }
     } else {
       // Direct call format
-      userIds = payload.user_ids || [user.id];
+      userIds = (payload.user_ids && payload.user_ids.length > 0) ? payload.user_ids : [user.id];
       type = payload.type;
       title = payload.title;
       message = payload.message || null;
