@@ -107,8 +107,8 @@ export default function Dashboard() {
         <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <Sparkles className="w-5 h-5 text-emerald-400 hidden" />
-              <span className="text-emerald-300 text-sm font-medium hidden">{greeting}</span>
+              
+              
               {user?.ngo_name && !isAdmin &&
               <span className="text-xs px-2.5 py-0.5 rounded-full bg-white/10 text-white/80">
                   {user.ngo_name}
