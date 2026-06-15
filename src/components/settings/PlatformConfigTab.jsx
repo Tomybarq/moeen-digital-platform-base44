@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
+import FramedToggle from "@/components/settings/FramedToggle";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { Save, Loader2, CheckCircle2, Palette, Globe, Bell, Shield, Database, Moon, Sun, Info, Settings } from "lucide-react";
+import { Save, Loader2, CheckCircle2, Palette, Globe, Bell, Shield, Database, Moon, Sun, Info } from "lucide-react";
 import { useTheme } from "@/components/ThemeProvider";
 import { motion } from "framer-motion";
 
@@ -60,7 +59,8 @@ export default function PlatformConfigTab() {
           <ConfigRow icon={theme === "dark" ? Moon : Sun}
             title="الوضع الليلي"
             desc={theme === "dark" ? "المنصة تعمل حالياً بالوضع الداكن" : "المنصة تعمل حالياً بالوضع الفاتح"}>
-            <Switch checked={theme === "dark"} onCheckedChange={toggleTheme} className="cursor-pointer" />
+            <FramedToggle checked={theme === "dark"} onCheckedChange={toggleTheme}
+              activeIcon={Moon} inactiveIcon={Sun} />
           </ConfigRow>
           <ConfigRow icon={Globe} title="اللغة والمنطقة" desc="العربية — المملكة العربية السعودية 🇸🇦">
             <Badge variant="secondary" className="font-mono text-xs">AR-SA</Badge>
@@ -80,11 +80,13 @@ export default function PlatformConfigTab() {
         <CardContent className="px-5 divide-y divide-border">
           <ConfigRow icon={Shield} title="السماح بتسجيل مستخدمين جدد"
             desc="عند التعطيل لن يتمكن أحد من التسجيل بدون دعوة">
-            <Switch checked={allowRegistration} onCheckedChange={setAllowRegistration} className="cursor-pointer" />
+            <FramedToggle checked={allowRegistration} onCheckedChange={setAllowRegistration}
+              activeLabel="مفتوح" inactiveLabel="مغلق" />
           </ConfigRow>
           <ConfigRow icon={Shield} title="وضع الصيانة"
             desc="تعطيل المنصة مؤقتاً للصيانة — يظهر للمستخدمين رسالة توضيحية">
-            <Switch checked={maintenanceMode} onCheckedChange={setMaintenanceMode} className="cursor-pointer" />
+            <FramedToggle checked={maintenanceMode} onCheckedChange={setMaintenanceMode}
+              activeLabel="مفعّل" inactiveLabel="معطّل" />
           </ConfigRow>
         </CardContent>
       </Card>
@@ -101,7 +103,8 @@ export default function PlatformConfigTab() {
         <CardContent className="px-5 divide-y divide-border">
           <ConfigRow icon={Bell} title="إشعارات البريد الإلكتروني"
             desc="إرسال تنبيهات للمستخدمين عبر البريد الإلكتروني">
-            <Switch checked={emailNotifs} onCheckedChange={setEmailNotifs} className="cursor-pointer" />
+            <FramedToggle checked={emailNotifs} onCheckedChange={setEmailNotifs}
+              activeLabel="مفعّلة" inactiveLabel="معطّلة" />
           </ConfigRow>
         </CardContent>
       </Card>
@@ -118,7 +121,8 @@ export default function PlatformConfigTab() {
         <CardContent className="px-5 divide-y divide-border">
           <ConfigRow icon={Database} title="الاحتفاظ بالبيانات المؤرشفة"
             desc="الاحتفاظ بسجلات المستفيدين والمنظمات المؤرشفة لمدة عام">
-            <Switch checked={dataRetention} onCheckedChange={setDataRetention} className="cursor-pointer" />
+            <FramedToggle checked={dataRetention} onCheckedChange={setDataRetention}
+              activeLabel="مفعّل" inactiveLabel="معطّل" />
           </ConfigRow>
         </CardContent>
       </Card>
