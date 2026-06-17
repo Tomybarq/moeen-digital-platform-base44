@@ -97,7 +97,7 @@ User          →  Platform users with 5 role levels
 ### Prerequisites
 - Node.js 18+
 - npm or yarn
-- Base44 account at [base44.com](https://base44.com)
+- Base44 account at [base44.com](https://base44.com) & Supabase SQL. (Private & Secure). 
 
 ### Installation
 
@@ -181,6 +181,7 @@ Contributions are welcome! Please follow these steps:
 3. Commit changes: `git commit -m 'feat: add your feature'`
 4. Push to branch: `git push origin feature/your-feature`
 5. Open a Pull Request
+6. Big star ^_^ 
 
 ---
 
@@ -198,14 +199,14 @@ All rights reserved © 2026.
 **Organization:** Ghazara for Trade & Marketing
 **Email:** tech@ghazara.net
 
-**Platform Owner:** Moeen Digital & Commercials 
+**Platform Owner:** Moeen Digital & Commercials Foundation.
 **Contact:** info@tamkeen.sa
 
 ---
 
 <div align="center">
 
-Built with ❤️ using [Base44](https://base44.com) • Powered by [TomyBarq AI](https://github.com/Tomybarq)
+Built with ❤️ using Base44-Manus-SQL-Gemini-Antigravity CLI • Powered by [TomyBarq AI](https://github.com/Tomybarq) 
 
 ⭐ Star this repo if you find it useful!
 
