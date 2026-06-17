@@ -166,16 +166,6 @@ button, a, tr {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Hide default cursor on non-touch devices (custom cursor active) */
-@media (hover: hover) and (pointer: fine) {
-  html.motion-enabled {
-    cursor: none;
-  }
-  html.motion-enabled * {
-    cursor: none !important;
-  }
-}
-
 /* Respect reduced-motion preference (accessibility) */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
