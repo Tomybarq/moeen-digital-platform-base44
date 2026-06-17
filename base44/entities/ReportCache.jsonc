@@ -4,7 +4,7 @@
   "properties": {
     "report_type": {
       "type": "string",
-      "description": "\u0646\u0648\u0639 \u0627\u0644\u062a\u0642\u0631\u064a\u0631 \u2014 \u0623\u062d\u062f \u0623\u0646\u0648\u0627\u0639 \u0627\u0644\u062a\u0642\u0627\u0631\u064a\u0631 \u0627\u0644\u062e\u0645\u0633\u0629"
+      "description": "\u0646\u0648\u0639 \u0627\u0644\u062a\u0642\u0631\u064a\u0631 \u2014 dashboard_stats \u0623\u0648 \u0623\u062d\u062f \u0623\u0646\u0648\u0627\u0639 \u0627\u0644\u062a\u0642\u0627\u0631\u064a\u0631 \u0627\u0644\u062e\u0645\u0633\u0629"
     },
     "filters_hash": {
       "type": "string",
@@ -22,7 +22,7 @@
     "expires_at": {
       "type": "string",
       "format": "date-time",
-      "description": "\u0648\u0642\u062a \u0627\u0646\u062a\u0647\u0627\u0621 \u0635\u0644\u0627\u062d\u064a\u0629 \u0627\u0644\u062a\u062e\u0632\u064a\u0646 \u0627\u0644\u0645\u0624\u0642\u062a (TTL: 15 \u062f\u0642\u064a\u0642\u0629)"
+      "description": "\u0648\u0642\u062a \u0627\u0646\u062a\u0647\u0627\u0621 \u0635\u0644\u0627\u062d\u064a\u0629 \u0627\u0644\u062a\u062e\u0632\u064a\u0646 \u0627\u0644\u0645\u0624\u0642\u062a (TTL)"
     },
     "generated_by_id": {
       "type": "string",
@@ -39,45 +39,9 @@
     "payload"
   ],
   "rls": {
-    "create": {
-      "user_condition": {
-        "role": {
-          "$in": [
-            "platform_admin",
-            "ngo_manager"
-          ]
-        }
-      }
-    },
-    "read": {
-      "user_condition": {
-        "role": {
-          "$in": [
-            "platform_admin",
-            "ngo_manager"
-          ]
-        }
-      }
-    },
-    "update": {
-      "user_condition": {
-        "role": {
-          "$in": [
-            "platform_admin",
-            "ngo_manager"
-          ]
-        }
-      }
-    },
-    "delete": {
-      "user_condition": {
-        "role": {
-          "$in": [
-            "platform_admin",
-            "ngo_manager"
-          ]
-        }
-      }
-    }
+    "create": true,
+    "read": true,
+    "update": true,
+    "delete": true
   }
 }
