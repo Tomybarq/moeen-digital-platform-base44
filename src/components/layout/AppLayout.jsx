@@ -3,6 +3,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import TopBar from "./TopBar";
 import MobileBottomNav from "./MobileBottomNav";
+import CustomCursor from "@/components/motion/CustomCursor";
 import { cn } from "@/lib/utils";
 
 const pageTitles = {
@@ -44,6 +45,7 @@ export default function AppLayout() {
 
   return (
     <div className="min-h-screen bg-background">
+      <CustomCursor />
       {/* Desktop sidebar */}
       <div className="hidden md:block">
         <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />

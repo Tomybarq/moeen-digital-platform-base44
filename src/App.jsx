@@ -8,6 +8,7 @@ import UserNotRegisteredError from "@/components/UserNotRegisteredError";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { TenantProvider } from "@/context/TenantContext";
+import { MotionProvider } from "@/context/MotionContext";
 
 // Auth pages
 import Login from "@/pages/Login";
@@ -93,16 +94,18 @@ const AuthenticatedApp = () => {
 function App() {
   return (
     <ThemeProvider>
-      <AuthProvider>
-        <TenantProvider>
-          <QueryClientProvider client={queryClientInstance}>
-            <Router>
-              <AuthenticatedApp />
-            </Router>
-            <Toaster />
-          </QueryClientProvider>
-        </TenantProvider>
-      </AuthProvider>
+      <MotionProvider>
+        <AuthProvider>
+          <TenantProvider>
+            <QueryClientProvider client={queryClientInstance}>
+              <Router>
+                <AuthenticatedApp />
+              </Router>
+              <Toaster />
+            </QueryClientProvider>
+          </TenantProvider>
+        </AuthProvider>
+      </MotionProvider>
     </ThemeProvider>
   );
 }
