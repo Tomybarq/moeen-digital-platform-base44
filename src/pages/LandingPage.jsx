@@ -123,53 +123,107 @@ export default function LandingPage() {
               {/* Decorative glow */}
               <div className="absolute inset-0 bg-brand-gold/5 blur-3xl rounded-full scale-75" />
 
-              {/* Desktop Monitor Mockup */}
+              {/* Desktop Monitor Mockup — Gold-Rim Premium */}
               <div className="relative z-10">
-                <div className="bg-white rounded-2xl shadow-2xl shadow-brand-navy/10 border border-gray-100 p-2 sm:p-3 max-w-md lg:max-w-lg">
-                  {/* Screen content */}
-                  <div className="bg-[#f8fafc] rounded-xl overflow-hidden border border-gray-100">
-                    {/* Mock browser bar */}
-                    <div className="flex items-center gap-1.5 px-3 py-2 bg-gray-50 border-b border-gray-100">
+                <div
+                  className="rounded-2xl p-[4px] max-w-md lg:max-w-lg relative"
+                  style={{
+                    background: "linear-gradient(145deg, #d4a83a, #c8972a, #b8861e, #c8972a)",
+                    boxShadow: "0 25px 60px -15px rgba(12, 49, 64, 0.3), 0 0 0 1px rgba(200, 150, 42, 0.2)",
+                  }}
+                >
+                  {/* Inner screen */}
+                  <div className="bg-white rounded-[14px] overflow-hidden border border-gray-100">
+                    {/* Browser bar */}
+                    <div className="flex items-center gap-1.5 px-3 py-2 bg-white border-b border-gray-100">
                       <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
                       <div className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
                       <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
-                      <div className="flex-1 mx-3 h-5 bg-white rounded-md border border-gray-200" />
-                    </div>
-                    {/* Mock dashboard content */}
-                    <div className="p-3 sm:p-4 space-y-3">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-brand-navy flex items-center justify-center">
-                          <BarChart3 className="w-4 h-4 text-brand-gold" />
-                        </div>
-                        <div>
-                          <div className="h-3 w-24 bg-brand-navy/80 rounded" />
-                          <div className="h-2 w-16 bg-gray-200 rounded mt-1" />
-                        </div>
+                      <div className="flex-1 mx-2 h-5 bg-gray-50 rounded-md border border-gray-100" />
+                      <div className="flex items-center gap-1.5">
+                        <div className="h-2.5 w-2.5 rounded bg-brand-gold/30" />
+                        <div className="h-2.5 w-5 bg-gray-100 rounded-sm" />
                       </div>
-                      {/* Mock charts */}
-                      <div className="grid grid-cols-3 gap-2">
-                        <div className="col-span-2 bg-white rounded-lg border border-gray-100 p-2">
-                          <div className="flex items-end gap-1 h-16">
-                            {[60, 35, 80, 45, 70, 55, 90].map((h, i) => (
-                              <div
-                                key={i}
-                                className="flex-1 rounded-sm bg-brand-navy/15"
-                                style={{ height: `${h}%` }}
-                              />
-                            ))}
+                    </div>
+
+                    {/* Dashboard content */}
+                    <div className="p-3 sm:p-4 space-y-2.5 bg-white">
+                      {/* Header row */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="w-7 h-7 rounded-lg bg-brand-navy flex items-center justify-center">
+                            <BarChart3 className="w-3.5 h-3.5 text-brand-gold" />
+                          </div>
+                          <div>
+                            <div className="h-2.5 w-24 bg-brand-navy/80 rounded-sm" />
+                            <div className="h-2 w-12 bg-gray-200 rounded-sm mt-0.5" />
                           </div>
                         </div>
-                        <div className="bg-white rounded-lg border border-gray-100 p-2 flex flex-col justify-center items-center gap-1">
-                          <div className="w-10 h-10 rounded-full border-4 border-brand-green/30 border-t-brand-green" />
-                          <div className="h-2 w-12 bg-gray-200 rounded" />
+                        <div className="h-4 px-2 rounded-full bg-brand-green/15 flex items-center">
+                          <span className="text-[8px] font-bold text-brand-green">LIVE</span>
                         </div>
                       </div>
-                      {/* Mock table */}
-                      <div className="space-y-1.5">
-                        {[80, 65, 90, 50].map((w, i) => (
+
+                      {/* Charts row */}
+                      <div className="grid grid-cols-3 gap-2">
+                        {/* Bar chart — dark navy card */}
+                        <div className="col-span-2 bg-brand-navy rounded-xl p-2.5 flex flex-col gap-1">
+                          <div className="flex items-end gap-1 h-14 relative">
+                            {[60, 35, 80, 45, 70, 55, 90].map((h, i) => (
+                              <div key={i} className="flex-1 flex flex-col items-center gap-0.5 justify-end h-full">
+                                <span className="text-[7px] font-medium text-brand-gold/70">{h}%</span>
+                                <div className="w-full rounded-t-[3px] bg-brand-gold" style={{ height: `${h}%` }} />
+                              </div>
+                            ))}
+                          </div>
+                          <div className="flex items-center justify-center gap-2 mt-0.5">
+                            <div className="flex items-center gap-0.5">
+                              <div className="w-1.5 h-1.5 rounded-full bg-brand-gold" />
+                              <span className="text-[7px] text-gray-400">Revenue</span>
+                            </div>
+                            <div className="flex items-center gap-0.5">
+                              <div className="w-1.5 h-1.5 rounded-full bg-brand-green/50" />
+                              <span className="text-[7px] text-gray-400">Cases</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Donut chart — dark navy card */}
+                        <div className="bg-brand-navy rounded-xl p-2 flex flex-col items-center justify-center gap-1.5">
+                          <div className="relative w-9 h-9">
+                            <svg viewBox="0 0 40 40" className="w-full h-full -rotate-90">
+                              <circle cx="20" cy="20" r="15" fill="none" stroke="#00A651" strokeWidth="5" strokeDasharray="28 66" />
+                              <circle cx="20" cy="20" r="15" fill="none" stroke="#c8972a" strokeWidth="5" strokeDasharray="19 75" strokeDashoffset="-28" />
+                              <circle cx="20" cy="20" r="15" fill="none" stroke="#334155" strokeWidth="5" strokeDasharray="47 47" strokeDashoffset="-47" />
+                            </svg>
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <span className="text-[7px] font-bold text-white">72%</span>
+                            </div>
+                          </div>
+                          <span className="text-[7px] text-gray-400">Completion</span>
+                        </div>
+                      </div>
+
+                      {/* Table rows */}
+                      <div className="space-y-1">
+                        {[
+                          { label: "Cases Reviewed", pct: 80, color: "#c8972a" },
+                          { label: "Donors Active", pct: 65, color: "#00A651" },
+                          { label: "Reports Generated", pct: 90, color: "#c8972a" },
+                          { label: "NGOs Onboarded", pct: 50, color: "#00A651" },
+                        ].map((row, i) => (
                           <div key={i} className="flex items-center gap-2">
-                            <div className="w-3 h-3 rounded-full bg-brand-navy/10" />
-                            <div className="h-2 rounded bg-gray-200" style={{ width: `${w}%` }} />
+                            <div className="w-2.5 h-2.5 rounded-full bg-brand-navy/15" />
+                            <div className="flex-1 h-2 bg-gray-100 rounded-sm overflow-hidden">
+                              <div
+                                className="h-full rounded-sm transition-all"
+                                style={{
+                                  width: `${row.pct}%`,
+                                  backgroundColor: row.color,
+                                }}
+                              />
+                            </div>
+                            <span className="text-[8px] font-medium text-gray-400 w-6 text-right">{row.pct}%</span>
                           </div>
                         ))}
                       </div>
