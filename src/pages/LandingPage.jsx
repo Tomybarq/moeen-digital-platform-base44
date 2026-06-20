@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { ClipboardList, BarChart3, UsersRound, Lock, LogIn } from "lucide-react";
-import SignInModal from "@/components/landing/SignInModal";
+import { Database, BarChart3, Megaphone, User, Lock, ShieldAlert, Eye, EyeOff } from "lucide-react";
 import TrustBadges from "@/components/landing/TrustBadges";
 import FeatureBanner from "@/components/landing/FeatureBanner";
 import ProcessFlow from "@/components/landing/ProcessFlow";
@@ -9,35 +8,36 @@ import WhyMoeen from "@/components/landing/WhyMoeen";
 import FooterCTA from "@/components/landing/FooterCTA";
 import FloatingControls from "@/components/landing/FloatingControls";
 
-const heroFeatures = [
+const valuePillars = [
   {
-    icon: ClipboardList,
-    title: "Smart Data Collection",
-    ar: "جمع البيانات الذكي",
-    desc: "Streamlined forms and field surveys for researchers to capture beneficiary data accurately and efficiently."
+    icon: Database,
+    title: "جمع البيانات الذكي",
+    en: "Smart Data Collection",
+    desc: "استمارات ذكية وبحوث ميدانية لجمع بيانات المستفيدين بدقة وكفاءة عالية.",
   },
   {
     icon: BarChart3,
-    title: "Real-Time Analytics",
-    ar: "تحليلات فورية",
-    desc: "Live dashboards and reports that turn raw data into actionable insights for decision-makers."
+    title: "تحليلات المنظمات",
+    en: "NGO Analytics",
+    desc: "لوحات تحكم فورية وتقارير تحوّل البيانات الخام إلى رؤى قابلة للتنفيذ.",
   },
   {
-    icon: UsersRound,
-    title: "Bridge the Gap",
-    ar: "سد الفجوة",
-    desc: "Connecting beneficiaries with donors through transparent, verified, and impactful case management."
+    icon: Megaphone,
+    title: "تتبع المسوّقين",
+    en: "Marketer Tracking",
+    desc: "متابعة أداء المسوّقين وقياس أثر حملات التبرع عبر لوحة متكاملة.",
   },
-  {
-    icon: Lock,
-    title: "Secure & Compliant",
-    ar: "آمن ومتوافق",
-    desc: "Enterprise-grade security with full compliance to Saudi data protection and privacy regulations."
-  }
 ];
 
 export default function LandingPage() {
-  const [signInOpen, setSignInOpen] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPass, setShowPass] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Auth handled by the platform
+  };
 
   return (
     <div dir="rtl" className="min-h-screen bg-[#fcfcfc] font-body">
@@ -57,264 +57,176 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Trust Badges + Sign In */}
+          {/* Trust Badges */}
           <div className="flex items-center gap-3">
             <TrustBadges />
-            <button
-              onClick={() => setSignInOpen(true)}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-navy text-white text-sm font-medium hover:bg-brand-navy/90 transition-all shadow-md shadow-brand-navy/20"
-            >
-              <LogIn className="w-4 h-4" />
-              <span className="hidden sm:inline">تسجيل الدخول</span>
-            </button>
           </div>
         </div>
       </header>
 
-      {/* ── Hero Section (Split: Text + Device Mockups) — Pure Gold ── */}
-      <section className="py-8 md:py-14 lg:py-20 px-4 sm:px-6 lg:px-8 overflow-hidden" style={{ background: "#FDFCF8" }}>
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+      {/* ── Integrated Entry Portal (Split‑Screen) ── */}
+      <section className="min-h-[calc(100vh-73px)] flex" style={{ background: "#fcfcfc" }}>
+        <div className="w-full grid grid-cols-1 lg:grid-cols-5">
 
-            {/* Left: Text + Features */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              className="flex flex-col gap-8 text-center lg:text-right"
-            >
-              <div className="space-y-4">
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold leading-tight tracking-tight" style={{ color: "#1E293B" }}>
-                  Moeen Digital{" "}
-                  <span style={{ color: "#C5A059" }}>Platform</span>
-                </h1>
-                <p className="text-base sm:text-lg lg:text-xl font-semibold leading-relaxed" style={{ color: "#C5A059" }}>
-                  Empowering NGOs & Social Researchers to Collect Data and Transform Lives
-                </p>
-                <p className="text-sm sm:text-base leading-relaxed max-w-lg mx-auto lg:mx-0" style={{ color: "#94a3b8" }}>
-                  A smart B2B platform that connects Beneficiaries and Donors through
-                  secure data, real-time insights, and measurable impact.
-                </p>
-              </div>
+          {/* Right Column — Branding & Value (60% ≈ 3/5) */}
+          <div className="lg:col-span-3 flex flex-col justify-center relative overflow-hidden" style={{ background: "linear-gradient(160deg, #0c3140 0%, #0d4a60 50%, #0c3140 100%)" }}>
+            {/* Decorative elements */}
+            <div className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-[0.06] -translate-y-32 translate-x-16" style={{ background: "#c8972a" }} />
+            <div className="absolute bottom-0 left-0 w-72 h-72 rounded-full opacity-[0.04]" style={{ background: "#00A651" }} />
+            <div className="absolute top-1/2 right-1/3 w-1 h-48 -translate-y-1/2 opacity-[0.03]" style={{ background: "linear-gradient(180deg, transparent, #c8972a, transparent)" }} />
 
-              {/* 4 Feature Cards — Gold top border */}
-              <div className="grid grid-cols-2 gap-3 sm:gap-4 max-w-lg mx-auto lg:mx-0">
-                {heroFeatures.map((f) => (
-                  <div
-                    key={f.title}
-                    className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition-all group border-t-[3px]"
-                    style={{ borderTopColor: "#C5A059", borderLeft: "1px solid #f1f5f9", borderRight: "1px solid #f1f5f9", borderBottom: "1px solid #f1f5f9" }}
-                  >
-                    <div
-                      className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform"
-                      style={{ background: "rgba(197,160,89,0.1)" }}
-                    >
-                      <f.icon className="w-5 h-5" style={{ color: "#C5A059" }} />
-                    </div>
-                    <h3 className="font-bold text-sm mb-1" style={{ color: "#1E293B" }}>{f.title}</h3>
-                    <p className="text-[11px] sm:text-xs leading-relaxed" style={{ color: "#94a3b8" }}>{f.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Right: Device Mockups — Pure Gold */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.15 }}
-              className="relative flex items-center justify-center"
-            >
-              {/* Decorative glow */}
-              <div className="absolute inset-0 blur-3xl rounded-full scale-75" style={{ background: "rgba(197,160,89,0.04)" }} />
-
-              {/* Desktop Monitor Mockup — Pure Gold Frame */}
-              <div className="relative z-10">
-                <div
-                  className="rounded-2xl p-[4px] max-w-md lg:max-w-lg relative"
-                  style={{
-                    background: "linear-gradient(145deg, #d4b06a, #C5A059, #b8943a, #C5A059)",
-                    boxShadow: "0 25px 60px -15px rgba(30,41,59,0.25), 0 0 0 1px rgba(197,160,89,0.2)",
-                  }}
-                >
-                  {/* Inner screen — white */}
-                  <div className="rounded-[14px] overflow-hidden border" style={{ background: "#ffffff", borderColor: "#f1f5f9" }}>
-                    {/* Browser bar — light */}
-                    <div className="flex items-center gap-1.5 px-3 py-2 bg-white border-b border-gray-100">
-                      <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
-                      <div className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
-                      <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
-                      <div className="flex-1 mx-2 h-5 bg-gray-50 rounded-md border border-gray-100" />
-                      <div className="flex items-center gap-1.5">
-                        <div className="h-2.5 w-2.5 rounded" style={{ background: "#C5A059", opacity: 0.4 }} />
-                        <div className="h-2.5 w-5 bg-gray-100 rounded-sm" />
-                      </div>
-                    </div>
-
-                    {/* Dashboard content — white */}
-                    <div className="p-3 sm:p-4 space-y-3" style={{ background: "#fcfcfc" }}>
-                      {/* Header row */}
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(197,160,89,0.12)" }}>
-                            <BarChart3 className="w-3.5 h-3.5" style={{ color: "#C5A059" }} />
-                          </div>
-                          <div>
-                            <div className="h-2.5 w-24 rounded-sm" style={{ background: "#1E293B", opacity: 0.8 }} />
-                            <div className="h-2 w-12 rounded-sm mt-0.5" style={{ background: "#e2e8f0" }} />
-                          </div>
-                        </div>
-                        <div className="h-4 px-2 rounded-full flex items-center" style={{ background: "rgba(197,160,89,0.12)" }}>
-                          <span className="text-[8px] font-bold" style={{ color: "#C5A059" }}>LIVE</span>
-                        </div>
-                      </div>
-
-                      {/* Charts row */}
-                      <div className="grid grid-cols-3 gap-2">
-                        {/* Bar chart */}
-                        <div className="col-span-2 rounded-xl p-2.5 flex flex-col gap-1.5" style={{ background: "#f1f5f9" }}>
-                          <div className="flex items-end gap-1 h-14">
-                            {[57, 79, 57, 90, 27, 58, 80, 37].map((h, i) => (
-                              <div key={i} className="flex-1 flex flex-col items-center gap-0.5 justify-end h-full">
-                                <span className="text-[7px] font-medium" style={{ color: "#C5A059" }}>{h}%</span>
-                                <div className="w-full rounded-t-[3px]" style={{ height: `${h}%`, background: "#C5A059" }} />
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Donut chart */}
-                        <div className="rounded-xl p-2 flex flex-col items-center justify-center gap-1.5" style={{ background: "#f1f5f9" }}>
-                          <div className="relative w-10 h-10">
-                            <svg viewBox="0 0 40 40" className="w-full h-full" style={{ transform: "rotate(-90deg)" }}>
-                              <circle cx="20" cy="20" r="14" fill="none" stroke="#e2e8f0" strokeWidth="6" strokeDasharray="88 0" />
-                              <circle cx="20" cy="20" r="14" fill="none" stroke="#C5A059" strokeWidth="6" strokeDasharray="28 60" />
-                              <circle cx="20" cy="20" r="14" fill="none" stroke="#94a3b8" strokeWidth="6" strokeDasharray="20 68" strokeDashoffset="-28" />
-                              <circle cx="20" cy="20" r="14" fill="none" stroke="#1E293B" strokeWidth="6" strokeDasharray="25 63" strokeDashoffset="-48" />
-                            </svg>
-                            <div className="absolute inset-0 flex flex-col items-center justify-center">
-                              <span className="text-[8px] font-bold leading-none" style={{ color: "#1E293B" }}>72%</span>
-                              <span className="text-[6px] leading-none mt-0.5" style={{ color: "#94a3b8" }}>Completion</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Bottom grid — 2x3 gold progress bars */}
-                      <div className="grid grid-cols-2 gap-x-3 gap-y-2">
-                        {[
-                          { label: "Cases Reviewed", pct: 80 },
-                          { label: "Donors Active", pct: 65 },
-                          { label: "Reports Generated", pct: 90 },
-                          { label: "Donors Active", pct: 65 },
-                          { label: "Reports Generated", pct: 90 },
-                          { label: "NGOs Onboarded", pct: 50 },
-                        ].map((row, i) => (
-                          <div key={i} className="space-y-1">
-                            <div className="flex items-center justify-between">
-                              <span className="text-[8px]" style={{ color: "#94a3b8" }}>{row.label}</span>
-                              <span className="text-[8px] font-medium" style={{ color: "#94a3b8" }}>{row.pct}%</span>
-                            </div>
-                            <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "#e2e8f0" }}>
-                              <div
-                                className="h-full rounded-full"
-                                style={{
-                                  width: `${row.pct}%`,
-                                  background: "#C5A059",
-                                }}
-                              />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+            <div className="relative z-10 px-8 sm:px-12 lg:px-16 py-10 lg:py-14">
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.7 }}
+                className="mb-10"
+              >
+                {/* Logo + name */}
+                <div className="flex items-center gap-3 mb-7">
+                  <img
+                    src="https://media.base44.com/images/public/6a2aca9f283d77c33f77ff49/9af41b6fb_logo-.jpg"
+                    alt="معين"
+                    className="h-12 w-auto object-contain"
+                  />
+                  <div>
+                    <p className="font-display font-bold text-white text-lg leading-tight">منصة معين الرقمية</p>
+                    <p className="text-[10px] text-brand-gold/60 tracking-widest">MOEEN DIGITAL PLATFORM</p>
                   </div>
                 </div>
 
-                {/* Floating Phone Mockup — Pure Gold */}
-                <div className="absolute -bottom-6 -right-4 sm:-right-8 z-20 hidden sm:block">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-extrabold leading-tight text-white mb-4">
+                  منصة{" "}
+                  <span style={{ color: "#c8972a" }}>ذكية</span>
+                  {" "}لإدارة العمل الخيري
+                </h1>
+                <p className="text-white/55 text-sm sm:text-base leading-relaxed max-w-md">
+                  منصة B2B تربط المستفيدين بالمتبرعين من خلال بيانات آمنة، تحليلات فورية، وأثر قابل للقياس.
+                </p>
+              </motion.div>
+
+              {/* 3 Value Pillars */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.25 }}
+                className="grid grid-cols-1 sm:grid-cols-3 gap-4"
+              >
+                {valuePillars.map((p, i) => (
                   <div
-                    className="bg-white rounded-[20px] w-32 sm:w-36 p-[3px] relative"
+                    key={p.en}
+                    className="rounded-2xl p-4 sm:p-5 transition-all group"
                     style={{
-                      boxShadow: "0 20px 50px -12px rgba(30,41,59,0.3), 0 0 0 2.5px #C5A059, 0 0 0 5px rgba(197,160,89,0.12)",
-                      transform: "rotate(-3deg) translateY(-4px)",
+                      background: "rgba(255,255,255,0.04)",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                      backdropFilter: "blur(8px)",
                     }}
                   >
-                    {/* Screen */}
-                    <div className="bg-white rounded-[17px] overflow-hidden border border-gray-100">
-                      {/* Status bar */}
-                      <div className="bg-white px-3 py-1.5 flex items-center justify-between">
-                        <div className="h-1 w-12 rounded-sm" style={{ background: "#1E293B" }} />
-                        <div className="flex items-center gap-1">
-                          <div className="w-1.5 h-1.5 rounded-full" style={{ background: "#C5A059" }} />
-                          <div className="w-1 h-1 rounded-full" style={{ background: "#e2e8f0" }} />
-                          <div className="w-1 h-1 rounded-full" style={{ background: "#e2e8f0" }} />
-                        </div>
-                      </div>
-
-                      {/* Dashboard widgets */}
-                      <div className="px-2.5 pb-2.5 space-y-2">
-                        {/* Title row */}
-                        <div className="flex items-center gap-1.5">
-                          <div className="w-1.5 h-1.5 rounded-full" style={{ background: "#C5A059" }} />
-                          <div className="h-1.5 w-14 bg-gray-200 rounded-sm" />
-                        </div>
-
-                        {/* Charts row */}
-                        <div className="grid grid-cols-7 gap-1">
-                          {/* Donut chart */}
-                          <div className="col-span-3 rounded-lg p-1.5 flex flex-col items-center gap-1" style={{ background: "#f1f5f9" }}>
-                            <div className="relative w-7 h-7">
-                              <svg viewBox="0 0 32 32" className="w-full h-full" style={{ transform: "rotate(-90deg)" }}>
-                                <circle cx="16" cy="16" r="11" fill="none" stroke="#e2e8f0" strokeWidth="7" strokeDasharray="69 0" />
-                                <circle cx="16" cy="16" r="11" fill="none" stroke="#C5A059" strokeWidth="7" strokeDasharray="22 47" />
-                                <circle cx="16" cy="16" r="11" fill="none" stroke="#94a3b8" strokeWidth="7" strokeDasharray="16 53" strokeDashoffset="-22" />
-                                <circle cx="16" cy="16" r="11" fill="none" stroke="#1E293B" strokeWidth="7" strokeDasharray="20 49" strokeDashoffset="-38" />
-                              </svg>
-                              <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="w-1.5 h-1.5 rounded-full" style={{ background: "#C5A059" }} />
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Bar chart */}
-                          <div className="col-span-4 rounded-lg p-1.5 flex flex-col gap-1" style={{ background: "#f1f5f9" }}>
-                            <div className="flex items-end gap-[2px] h-7">
-                              {[40, 65, 30, 85, 55, 70, 45, 60, 50, 80, 35, 90].map((h, i) => (
-                                <div
-                                  key={i}
-                                  className="flex-1 rounded-t-[1px]"
-                                  style={{
-                                    height: `${h}%`,
-                                    background: i % 3 === 0 ? "#C5A059" : i % 3 === 1 ? "#94a3b8" : "#e2e8f0",
-                                  }}
-                                />
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Text blocks */}
-                        <div className="space-y-1">
-                          <div className="h-1 w-full bg-gray-100 rounded-sm" />
-                          <div className="h-1 w-11/12 bg-gray-100 rounded-sm" />
-                          <div className="h-1 w-9/12 bg-gray-100 rounded-sm" />
-                        </div>
-
-                        {/* Highlight block */}
-                        <div className="rounded-md h-5" style={{ background: "rgba(197,160,89,0.12)" }} />
-
-                        {/* Bottom bar */}
-                        <div className="rounded-md h-4" style={{ background: "#1E293B" }} />
-                      </div>
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ background: "rgba(200,151,42,0.12)" }}>
+                      <p.icon className="w-5 h-5" style={{ color: "#c8972a" }} />
                     </div>
+                    <h3 className="font-bold text-sm text-white mb-1.5">{p.title}</h3>
+                    <p className="text-[11px] sm:text-xs leading-relaxed text-white/45">{p.desc}</p>
+                  </div>
+                ))}
+              </motion.div>
 
-                    {/* Bottom home indicator */}
-                    <div className="flex justify-center pb-1.5 pt-0.5">
-                      <div className="w-8 h-1 bg-gray-300 rounded-full" />
+              {/* Trust badge strip */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.7, delay: 0.5 }}
+                className="mt-8 flex items-center gap-3 flex-wrap"
+              >
+                <TrustBadges />
+              </motion.div>
+            </div>
+          </div>
+
+          {/* Left Column — Auth Form (40% ≈ 2/5) */}
+          <div className="lg:col-span-2 flex items-center justify-center p-6 sm:p-10 lg:p-12" style={{ background: "#f8fafc" }}>
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="w-full max-w-sm"
+            >
+              {/* Form Card */}
+              <div
+                className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100"
+                style={{ boxShadow: "0 20px 60px -12px rgba(12,49,64,0.12)" }}
+              >
+                {/* Header */}
+                <div className="text-center mb-6">
+                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: "rgba(12,49,64,0.06)" }}>
+                    <Lock className="w-7 h-7" style={{ color: "#c8972a" }} />
+                  </div>
+                  <h2 className="text-xl font-extrabold font-display text-brand-navy mb-1">تسجيل الدخول</h2>
+                  <p className="text-sm text-gray-400">أدخل بياناتك للوصول إلى المنصة</p>
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  {/* Username */}
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-medium text-brand-navy">اسم المستخدم</label>
+                    <div className="relative">
+                      <User className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                      <input
+                        type="text"
+                        placeholder="أدخل اسم المستخدم"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        className="w-full h-11 pr-10 pl-4 rounded-xl border border-gray-200 bg-gray-50 text-brand-navy text-sm outline-none transition-all focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 focus:bg-white"
+                        required
+                      />
                     </div>
                   </div>
-                </div>
+
+                  {/* Password */}
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-medium text-brand-navy">كلمة المرور</label>
+                    <div className="relative">
+                      <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                      <input
+                        type={showPass ? "text" : "password"}
+                        placeholder="••••••••"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full h-11 pr-10 pl-10 rounded-xl border border-gray-200 bg-gray-50 text-brand-navy text-sm outline-none transition-all focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30 focus:bg-white"
+                        required
+                      />
+                      <button
+                        type="button"
+                        tabIndex={-1}
+                        onClick={() => setShowPass(!showPass)}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                      >
+                        {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Submit */}
+                  <button
+                    type="submit"
+                    className="w-full h-12 rounded-xl font-bold text-white text-sm transition-all flex items-center justify-center gap-2 shadow-lg mt-2"
+                    style={{
+                      background: "linear-gradient(135deg, #0c3140 0%, #1a5470 100%)",
+                      boxShadow: "0 4px 20px rgba(12,49,64,0.35)",
+                    }}
+                  >
+                    <Lock className="w-4 h-4" />
+                    الدخول للمنصة
+                  </button>
+
+                  {/* Warning notice */}
+                  <div className="flex items-start gap-2.5 rounded-xl p-3 bg-brand-gold/[0.07] border border-brand-gold/20">
+                    <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5 text-brand-gold" />
+                    <span className="text-xs text-gray-500 leading-relaxed">
+                      الدخول خاص للمنظمات الأهلية — تواصل مع إدارة المنصة للدخول
+                    </span>
+                  </div>
+                </form>
               </div>
             </motion.div>
           </div>
@@ -432,9 +344,6 @@ export default function LandingPage() {
 
       {/* ── Footer CTA ── */}
       <FooterCTA />
-
-      {/* ── Sign In Modal ── */}
-      <SignInModal open={signInOpen} onClose={() => setSignInOpen(false)} />
 
       {/* ── Floating Controls ── */}
       <FloatingControls />
