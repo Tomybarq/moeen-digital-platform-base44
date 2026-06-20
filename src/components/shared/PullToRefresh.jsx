@@ -3,60 +3,59 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 export default function PullToRefresh({ onRefresh, children, className }) {
-  const [pulling, setPulling] = useState(false);
   const [pullDistance, setPullDistance] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
-  const startY = useRef(0);
-  const containerRef = useRef(null);
+  const startY = useRef(null);
+  const pulling = useRef(false);
   const THRESHOLD = 70;
 
   const handleTouchStart = useCallback((e) => {
-    if (containerRef.current?.scrollTop > 0) return;
+    if (window.scrollY > 2) return;
     startY.current = e.touches[0].clientY;
-    setPulling(true);
+    pulling.current = true;
   }, []);
 
   const handleTouchMove = useCallback((e) => {
-    if (!pulling) return;
+    if (!pulling.current || startY.current === null) return;
     const dy = e.touches[0].clientY - startY.current;
     if (dy <= 0) { setPullDistance(0); return; }
-    setPullDistance(Math.min(dy * 0.5, THRESHOLD + 20));
-  }, [pulling]);
+    setPullDistance(Math.min(dy * 0.5, THRESHOLD + 30));
+  }, []);
 
   const handleTouchEnd = useCallback(async () => {
-    if (pullDistance >= THRESHOLD) {
+    if (!pulling.current) return;
+    pulling.current = false;
+
+    if (pullDistance >= THRESHOLD && !refreshing) {
       setRefreshing(true);
       setPullDistance(50);
-      if (onRefresh) await onRefresh();
+      try { await onRefresh(); } catch {}
       setRefreshing(false);
     }
+    startY.current = null;
     setPullDistance(0);
-    setPulling(false);
-  }, [pullDistance, onRefresh]);
+  }, [pullDistance, refreshing, onRefresh]);
 
   return (
-    <div className={cn("relative", className)}>
-      <div
-        ref={containerRef}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        className="overflow-auto"
+    <div
+      className={cn("relative", className)}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
+      <motion.div
+        initial={false}
+        animate={{ height: pullDistance > 0 ? pullDistance : 0, opacity: pullDistance > 0 ? 1 : 0 }}
+        className="flex items-center justify-center overflow-hidden"
       >
-        {pulling && pullDistance > 0 && (
-          <motion.div
-            initial={{ height: 0 }}
-            animate={{ height: pullDistance }}
-            className="flex items-center justify-center overflow-hidden"
-          >
-            <div className={cn(
-              "w-8 h-8 rounded-full border-2 border-primary/30 border-t-primary",
-              refreshing ? "animate-spin" : ""
-            )} />
-          </motion.div>
+        <div className={cn(
+          "w-8 h-8 rounded-full border-2 border-primary/30",
+          refreshing ? "border-t-primary animate-spin" : "border-t-primary"
         )}
-        {children}
-      </div>
+          style={!refreshing && pullDistance > 0 ? { transform: `rotate(${pullDistance * 3}deg)` } : undefined}
+        />
+      </motion.div>
+      {children}
     </div>
   );
 }
