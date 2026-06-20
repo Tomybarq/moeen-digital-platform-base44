@@ -8,31 +8,31 @@ import WhyMoeen from "@/components/landing/WhyMoeen";
 import FooterCTA from "@/components/landing/FooterCTA";
 
 const heroFeatures = [
-  {
-    icon: FileText,
-    title: "Smart Data Collection",
-    ar: "جمع البيانات الذكي",
-    desc: "Streamlined forms and field surveys for researchers to capture beneficiary data accurately and efficiently.",
-  },
-  {
-    icon: BarChart3,
-    title: "Real-Time Analytics",
-    ar: "تحليلات فورية",
-    desc: "Live dashboards and reports that turn raw data into actionable insights for decision-makers.",
-  },
-  {
-    icon: Users,
-    title: "Bridge the Gap",
-    ar: "سد الفجوة",
-    desc: "Connecting beneficiaries with donors through transparent, verified, and impactful case management.",
-  },
-  {
-    icon: Lock,
-    title: "Secure & Compliant",
-    ar: "آمن ومتوافق",
-    desc: "Enterprise-grade security with full compliance to Saudi data protection and privacy regulations.",
-  },
-];
+{
+  icon: FileText,
+  title: "Smart Data Collection",
+  ar: "جمع البيانات الذكي",
+  desc: "Streamlined forms and field surveys for researchers to capture beneficiary data accurately and efficiently."
+},
+{
+  icon: BarChart3,
+  title: "Real-Time Analytics",
+  ar: "تحليلات فورية",
+  desc: "Live dashboards and reports that turn raw data into actionable insights for decision-makers."
+},
+{
+  icon: Users,
+  title: "Bridge the Gap",
+  ar: "سد الفجوة",
+  desc: "Connecting beneficiaries with donors through transparent, verified, and impactful case management."
+},
+{
+  icon: Lock,
+  title: "Secure & Compliant",
+  ar: "آمن ومتوافق",
+  desc: "Enterprise-grade security with full compliance to Saudi data protection and privacy regulations."
+}];
+
 
 export default function LandingPage() {
   return (
@@ -47,7 +47,7 @@ export default function LandingPage() {
                 <span className="text-brand-gold font-display font-bold text-lg">م</span>
               </div>
               <div className="leading-tight">
-                <p className="font-display font-bold text-brand-navy text-sm">معين</p>
+                <p className="font-display font-bold text-brand-navy text-sm">منصة معين الرقمية</p>
                 <p className="text-[9px] text-gray-400 tracking-wide">MOEEN DIGITAL TRADING</p>
               </div>
             </div>
@@ -67,8 +67,8 @@ export default function LandingPage() {
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              className="flex flex-col gap-8 text-center lg:text-right"
-            >
+              className="flex flex-col gap-8 text-center lg:text-right">
+              
               <div className="space-y-4">
                 <h1 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-brand-navy leading-tight">
                   Moeen Digital{" "}
@@ -88,18 +88,18 @@ export default function LandingPage() {
 
               {/* Feature grid */}
               <div className="grid grid-cols-2 gap-4">
-                {heroFeatures.map((f) => (
-                  <div
-                    key={f.title}
-                    className="bg-slate-50 rounded-2xl p-4 border border-gray-100 hover:border-brand-gold/30 transition-all hover-lift"
-                  >
+                {heroFeatures.map((f) =>
+                <div
+                  key={f.title}
+                  className="bg-slate-50 rounded-2xl p-4 border border-gray-100 hover:border-brand-gold/30 transition-all hover-lift">
+                  
                     <div className="w-10 h-10 rounded-xl bg-brand-navy flex items-center justify-center mb-3">
                       <f.icon className="w-5 h-5 text-brand-gold" />
                     </div>
                     <h3 className="font-bold text-sm text-brand-navy mb-1">{f.title}</h3>
                     <p className="text-xs text-gray-400 leading-relaxed">{f.desc}</p>
                   </div>
-                ))}
+                )}
               </div>
             </motion.div>
 
@@ -122,6 +122,6 @@ export default function LandingPage() {
 
       {/* ── Footer CTA ── */}
       <FooterCTA />
-    </div>
-  );
+    </div>);
+
 }
