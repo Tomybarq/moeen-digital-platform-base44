@@ -43,9 +43,11 @@ export default function LandingPage() {
           {/* Logo */}
           <div className="flex items-center gap-3 shrink-0">
             <div className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-lg bg-brand-navy flex items-center justify-center">
-                <span className="text-brand-gold font-display font-bold text-lg">م</span>
-              </div>
+              <img
+                src="https://media.base44.com/images/public/6a2aca9f283d77c33f77ff49/9af41b6fb_logo-.jpg"
+                alt="معين الرقمية التجارية"
+                className="h-9 w-auto object-contain"
+              />
               <div className="leading-tight">
                 <p className="font-display font-bold text-brand-navy text-sm">منصة معين الرقمية</p>
                 <p className="text-[9px] text-gray-400 tracking-wide">MOEEN DIGITAL TRADING</p>
