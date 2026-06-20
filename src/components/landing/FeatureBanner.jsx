@@ -1,4 +1,4 @@
-import { Handshake, Users, ShieldCheck } from "lucide-react";
+import { Handshake, UsersRound, ShieldCheck } from "lucide-react";
 
 const features = [
   {
@@ -7,7 +7,7 @@ const features = [
     ar: "مبني للجمعيات. مصمم للأثر.",
   },
   {
-    icon: Users,
+    icon: UsersRound,
     title: "Connect. Collaborate. Create Change.",
     ar: "تواصل. تعاون. اصنع التغيير.",
   },
@@ -20,10 +20,15 @@ const features = [
 
 export default function FeatureBanner() {
   return (
-    <section className="bg-brand-navy py-14 px-4">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-        {features.map((f) => (
-          <div key={f.title} className="flex items-start gap-4 text-white">
+    <section className="bg-brand-navy py-12 md:py-14 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-0">
+        {features.map((f, i) => (
+          <div
+            key={f.title}
+            className={`flex items-start gap-4 text-white px-4 ${
+              i < 2 ? "md:border-l border-white/15" : ""
+            }`}
+          >
             <div className="w-12 h-12 rounded-xl bg-brand-gold/15 flex items-center justify-center shrink-0">
               <f.icon className="w-6 h-6 text-brand-gold" />
             </div>
