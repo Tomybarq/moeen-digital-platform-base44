@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { Users, Search, Download, Upload, LayoutGrid, List, Package } from "lucide-react";
+import PullToRefresh from "@/components/shared/PullToRefresh";
 import PaginationBar from "@/components/shared/PaginationBar";
 import { paginate, DEFAULT_PAGE_SIZE } from "@/lib/pagination";
 import { ErrorLogger } from "@/lib/errorLogger";
@@ -147,8 +148,12 @@ export default function Beneficiaries() {
   const urgentCount = beneficiaries.filter(b => b.priority === "عاجل" && b.status !== "archived").length;
   const activeCount = beneficiaries.filter(b => b.status === "active").length;
 
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries({ queryKey: ["beneficiaries"] });
+  };
+
   return (
-    <div className="space-y-6">
+    <PullToRefresh onRefresh={handleRefresh} className="space-y-6">
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
         className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -288,6 +293,6 @@ export default function Beneficiaries() {
         beneficiary={docsTarget} onUpdate={handleDocUpdate} />
 
       <MarketingKitDialog open={kitOpen} onOpenChange={setKitOpen} beneficiaries={beneficiaries} />
-    </div>
+    </PullToRefresh>
   );
 }

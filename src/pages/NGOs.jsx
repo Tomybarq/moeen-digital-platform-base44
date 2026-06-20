@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { Building2, Search, LayoutGrid, List, SlidersHorizontal } from "lucide-react";
+import PullToRefresh from "@/components/shared/PullToRefresh";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import NGOService from "@/services/NGOService";
 import { motion, AnimatePresence } from "framer-motion";
@@ -94,8 +95,12 @@ export default function NGOs() {
   const activeCount = ngos.filter((n) => n.status !== "archived").length;
   const archivedCount = ngos.filter((n) => n.status === "archived").length;
 
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries({ queryKey: ["ngos"] });
+  };
+
   return (
-    <div className="space-y-6">
+    <PullToRefresh onRefresh={handleRefresh} className="space-y-6">
       {/* Page header */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
@@ -229,6 +234,6 @@ export default function NGOs() {
         ngo={editingNGO}
         onSave={handleSave}
       />
-    </div>
+    </PullToRefresh>
   );
 }

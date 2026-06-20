@@ -3,14 +3,32 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Shield, KeyRound, LogOut, Mail, ShieldCheck, User, AlertTriangle } from "lucide-react";
+import {
+  Dialog, DialogContent, DialogDescription, DialogFooter,
+  DialogHeader, DialogTitle, DialogTrigger,
+} from "@/components/ui/dialog";
+import { Shield, KeyRound, LogOut, Mail, ShieldCheck, User, AlertTriangle, Trash2 } from "lucide-react";
 import RoleBadge from "@/components/auth/RoleBadge";
 import ChangePasswordDialog from "@/components/auth/ChangePasswordDialog";
 import { useAuth } from "@/lib/AuthContext";
+import { base44 } from "@/api/base44Client";
 
 export default function ProfileSecurityTab() {
   const { user, logout } = useAuth();
   const [showPwd, setShowPwd] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
+  const [deleting, setDeleting] = useState(false);
+
+  const handleDeleteAccount = async () => {
+    setDeleting(true);
+    try {
+      await base44.auth.updateMe({ status: "deleted" });
+      logout();
+    } catch {
+      setDeleting(false);
+    }
+  };
 
   return (
     <>
@@ -69,6 +87,49 @@ export default function ProfileSecurityTab() {
               <LogOut className="w-4 h-4" />
               تسجيل الخروج من الحساب
             </Button>
+            <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="ghost"
+                  className="w-full h-11 cursor-pointer justify-start gap-3 text-destructive/70 hover:text-destructive hover:bg-destructive/5">
+                  <Trash2 className="w-4 h-4" />
+                  حذف الحساب نهائياً
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md" dir="rtl">
+                <DialogHeader>
+                  <DialogTitle className="text-destructive flex items-center gap-2">
+                    <AlertTriangle className="w-5 h-5" /> حذف الحساب نهائياً
+                  </DialogTitle>
+                  <DialogDescription className="text-sm leading-relaxed space-y-3 pt-2">
+                    <span className="block font-semibold text-foreground">تحذير: لا يمكن التراجع عن هذا الإجراء!</span>
+                    <span className="block">
+                      سيتم حذف جميع بياناتك المرتبطة بالمنصة بشكل دائم، بما في ذلك سجل المستفيدين، التقارير، والإعدادات الشخصية.
+                    </span>
+                    <span className="block text-muted-foreground">
+                      اكتب <strong className="text-destructive">حذف</strong> في الحقل أدناه لتأكيد رغبتك في حذف الحساب.
+                    </span>
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <input
+                    type="text"
+                    placeholder="اكتب كلمة &#34;حذف&#34; للتأكيد"
+                    value={deleteConfirmText}
+                    onChange={(e) => setDeleteConfirmText(e.target.value)}
+                    className="w-full h-11 rounded-xl border border-border bg-muted px-4 text-sm outline-none focus:border-destructive focus:ring-1 focus:ring-destructive/30"
+                  />
+                </div>
+                <DialogFooter className="gap-2 sm:gap-0">
+                  <Button variant="outline" onClick={() => { setDeleteDialogOpen(false); setDeleteConfirmText(""); }}
+                    className="cursor-pointer">إلغاء</Button>
+                  <Button variant="destructive" onClick={handleDeleteAccount}
+                    disabled={deleteConfirmText !== "حذف" || deleting}
+                    className="cursor-pointer gap-2">
+                    {deleting ? "جاري الحذف…" : "نعم، احذف حسابي"}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         </CardContent>
       </Card>
