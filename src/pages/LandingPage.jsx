@@ -104,7 +104,7 @@ export default function LandingPage() {
                   {" "}لإدارة العمل الخيري
                 </h1>
                 <p className="text-white/55 text-sm sm:text-base leading-relaxed max-w-md">
-                  منصة B2B تربط المستفيدين بالمتبرعين من خلال بيانات آمنة، تحليلات فورية، وأثر قابل للقياس.
+                  منصة مصممة بتقنيات ذكية لتربط المستفيدين بالمتبرعين من خلال بيانات آمنية، تحليلات فورية، وأثر قابل للقياس
                 </p>
               </motion.div>
 
