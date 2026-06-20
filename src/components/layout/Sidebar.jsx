@@ -12,6 +12,7 @@ import {
   ClipboardPlus,
   ScrollText,
   BarChart3,
+  Share2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -24,6 +25,7 @@ const baseNavItems = [
   { label: "أداء المنظمات",  icon: BarChart3,      path: "/ngo-performance", roles: null },
   { label: "المستفيدون",     icon: Users,           path: "/beneficiaries",roles: null },
   { label: "المسوّقون",      icon: Megaphone,       path: "/marketers",    roles: [ROLES.PLATFORM_ADMIN, ROLES.NGO_MANAGER, ROLES.MARKETER] },
+  { label: "لوحة المسوّق",   icon: Share2,          path: "/marketer-dashboard", roles: [ROLES.MARKETER] },
   { label: "مساحة الباحث",  icon: ClipboardPlus,   path: "/researcher",   roles: [ROLES.RESEARCHER, ROLES.PLATFORM_ADMIN, ROLES.NGO_MANAGER] },
 ];
 
