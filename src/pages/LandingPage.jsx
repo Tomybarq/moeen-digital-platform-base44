@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
-import { ClipboardList, BarChart3, UsersRound, Lock } from "lucide-react";
+import { useState } from "react";
+import { ClipboardList, BarChart3, UsersRound, Lock, LogIn } from "lucide-react";
+import SignInModal from "@/components/landing/SignInModal";
 import TrustBadges from "@/components/landing/TrustBadges";
 import FeatureBanner from "@/components/landing/FeatureBanner";
 import ProcessFlow from "@/components/landing/ProcessFlow";
@@ -34,6 +36,8 @@ const heroFeatures = [
 ];
 
 export default function LandingPage() {
+  const [signInOpen, setSignInOpen] = useState(false);
+
   return (
     <div dir="rtl" className="min-h-screen bg-[#fcfcfc] font-body">
       {/* ── Header ── */}
@@ -52,8 +56,17 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Trust Badges */}
-          <TrustBadges />
+          {/* Trust Badges + Sign In */}
+          <div className="flex items-center gap-3">
+            <TrustBadges />
+            <button
+              onClick={() => setSignInOpen(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-navy text-white text-sm font-medium hover:bg-brand-navy/90 transition-all shadow-md shadow-brand-navy/20"
+            >
+              <LogIn className="w-4 h-4" />
+              <span className="hidden sm:inline">تسجيل الدخول</span>
+            </button>
+          </div>
         </div>
       </header>
 
@@ -289,6 +302,9 @@ export default function LandingPage() {
 
       {/* ── Footer CTA ── */}
       <FooterCTA />
+
+      {/* ── Sign In Modal ── */}
+      <SignInModal open={signInOpen} onClose={() => setSignInOpen(false)} />
     </div>
   );
 }
