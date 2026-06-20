@@ -42,6 +42,7 @@ const bottomNavItems = [
 function NavLink({ item, collapsed, onNavigate, isActive, userRole }) {
   const isMarketer = userRole === ROLES.MARKETER;
   const isResearcher = userRole === ROLES.RESEARCHER;
+  const Icon = item?.icon || LayoutDashboard;
 
   return (
     <Link
@@ -66,7 +67,7 @@ function NavLink({ item, collapsed, onNavigate, isActive, userRole }) {
           isMarketer ? "bg-[#5eead4]/90" : "bg-white/90"
         )} />
       )}
-      <item.icon className={cn(
+      <Icon className={cn(
         "w-5 h-5 shrink-0 transition-colors duration-200",
         isActive ? "text-white" : "text-white/70 group-hover:text-white"
       )} />
@@ -112,12 +113,12 @@ export default function Sidebar({ collapsed, onToggle, onNavigate, context = "de
 
   const visibleMain = mainNavItems.filter(item => {
     if (!item.roles) return !isResearcher && !isMarketer;
-    return item.roles.includes(userRole);
+    return item.roles?.includes(userRole);
   });
 
   const visibleBottom = bottomNavItems.filter(item => {
     if (!item.roles) return true; // profile always visible
-    return item.roles.includes(userRole);
+    return item.roles?.includes(userRole);
   });
 
   return (
