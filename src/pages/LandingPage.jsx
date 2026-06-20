@@ -113,117 +113,110 @@ export default function LandingPage() {
               </div>
             </motion.div>
 
-            {/* Right: Device Mockups */}
+            {/* Right: Device Mockups — Tech Neon */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.15 }}
               className="relative flex items-center justify-center"
+              style={{ background: "#0c151c" }}
             >
-              {/* Decorative glow */}
-              <div className="absolute inset-0 bg-brand-gold/5 blur-3xl rounded-full scale-75" />
-
-              {/* Desktop Monitor Mockup — Gold-Rim Premium */}
+              {/* Desktop Monitor Mockup — Cyan-Gold Neon Frame */}
               <div className="relative z-10">
                 <div
-                  className="rounded-2xl p-[4px] max-w-md lg:max-w-lg relative"
+                  className="rounded-2xl p-[3px] max-w-md lg:max-w-lg relative"
                   style={{
-                    background: "linear-gradient(145deg, #d4a83a, #c8972a, #b8861e, #c8972a)",
-                    boxShadow: "0 25px 60px -15px rgba(12, 49, 64, 0.3), 0 0 0 1px rgba(200, 150, 42, 0.2)",
+                    background: "linear-gradient(135deg, #00c2cb, #00a8cc, #c8972a, #d4af37)",
+                    boxShadow: "0 0 40px rgba(0,194,203,0.15), 0 0 80px rgba(200,150,42,0.1), 0 30px 60px -20px rgba(0,0,0,0.5)",
                   }}
                 >
-                  {/* Inner screen */}
-                  <div className="bg-white rounded-[14px] overflow-hidden border border-gray-100">
-                    {/* Browser bar */}
-                    <div className="flex items-center gap-1.5 px-3 py-2 bg-white border-b border-gray-100">
+                  {/* Inner screen — dark navy */}
+                  <div className="rounded-[15px] overflow-hidden" style={{ background: "#0a1a24" }}>
+                    {/* Browser bar — dark */}
+                    <div className="flex items-center gap-1.5 px-3 py-2" style={{ background: "#0d212e", borderBottom: "1px solid #162a38" }}>
                       <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
                       <div className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
                       <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
-                      <div className="flex-1 mx-2 h-5 bg-gray-50 rounded-md border border-gray-100" />
+                      <div className="flex-1 mx-2 h-5 rounded-md border" style={{ background: "#0c1a24", borderColor: "#1a3040" }} />
                       <div className="flex items-center gap-1.5">
-                        <div className="h-2.5 w-2.5 rounded bg-brand-gold/30" />
-                        <div className="h-2.5 w-5 bg-gray-100 rounded-sm" />
+                        <div className="h-2.5 w-2.5 rounded" style={{ background: "#00c2cb", opacity: 0.5 }} />
+                        <div className="h-2.5 w-5 rounded-sm" style={{ background: "#1a3040" }} />
                       </div>
                     </div>
 
                     {/* Dashboard content */}
-                    <div className="p-3 sm:p-4 space-y-2.5 bg-white">
+                    <div className="p-3 sm:p-4 space-y-3" style={{ background: "#0a1a24" }}>
                       {/* Header row */}
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 rounded-lg bg-brand-navy flex items-center justify-center">
-                            <BarChart3 className="w-3.5 h-3.5 text-brand-gold" />
+                          <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "#132a38" }}>
+                            <BarChart3 className="w-3.5 h-3.5" style={{ color: "#d4af37" }} />
                           </div>
                           <div>
-                            <div className="h-2.5 w-24 bg-brand-navy/80 rounded-sm" />
-                            <div className="h-2 w-12 bg-gray-200 rounded-sm mt-0.5" />
+                            <div className="h-2.5 w-24 rounded-sm" style={{ background: "#1a3850" }} />
+                            <div className="h-2 w-12 rounded-sm mt-1" style={{ background: "#162a38" }} />
                           </div>
                         </div>
-                        <div className="h-4 px-2 rounded-full bg-brand-green/15 flex items-center">
-                          <span className="text-[8px] font-bold text-brand-green">LIVE</span>
+                        <div className="h-4 px-2 rounded-full flex items-center" style={{ background: "rgba(56,176,0,0.15)" }}>
+                          <span className="text-[8px] font-bold" style={{ color: "#38b000" }}>LIVE</span>
                         </div>
                       </div>
 
                       {/* Charts row */}
                       <div className="grid grid-cols-3 gap-2">
                         {/* Bar chart — dark navy card */}
-                        <div className="col-span-2 bg-brand-navy rounded-xl p-2.5 flex flex-col gap-1">
-                          <div className="flex items-end gap-1 h-14 relative">
-                            {[60, 35, 80, 45, 70, 55, 90].map((h, i) => (
+                        <div className="col-span-2 rounded-xl p-2.5 flex flex-col gap-1.5" style={{ background: "#0d212e" }}>
+                          <div className="flex items-end gap-1 h-14">
+                            {[57, 79, 57, 90, 27, 58, 80, 37].map((h, i) => (
                               <div key={i} className="flex-1 flex flex-col items-center gap-0.5 justify-end h-full">
-                                <span className="text-[7px] font-medium text-brand-gold/70">{h}%</span>
-                                <div className="w-full rounded-t-[3px] bg-brand-gold" style={{ height: `${h}%` }} />
+                                <span className="text-[7px] font-medium" style={{ color: "#d4af37", opacity: 0.8 }}>{h}%</span>
+                                <div className="w-full rounded-t-[3px]" style={{ height: `${h}%`, background: "#d4af37" }} />
                               </div>
                             ))}
-                          </div>
-                          <div className="flex items-center justify-center gap-2 mt-0.5">
-                            <div className="flex items-center gap-0.5">
-                              <div className="w-1.5 h-1.5 rounded-full bg-brand-gold" />
-                              <span className="text-[7px] text-gray-400">Revenue</span>
-                            </div>
-                            <div className="flex items-center gap-0.5">
-                              <div className="w-1.5 h-1.5 rounded-full bg-brand-green/50" />
-                              <span className="text-[7px] text-gray-400">Cases</span>
-                            </div>
                           </div>
                         </div>
 
                         {/* Donut chart — dark navy card */}
-                        <div className="bg-brand-navy rounded-xl p-2 flex flex-col items-center justify-center gap-1.5">
-                          <div className="relative w-9 h-9">
-                            <svg viewBox="0 0 40 40" className="w-full h-full -rotate-90">
-                              <circle cx="20" cy="20" r="15" fill="none" stroke="#00A651" strokeWidth="5" strokeDasharray="28 66" />
-                              <circle cx="20" cy="20" r="15" fill="none" stroke="#c8972a" strokeWidth="5" strokeDasharray="19 75" strokeDashoffset="-28" />
-                              <circle cx="20" cy="20" r="15" fill="none" stroke="#334155" strokeWidth="5" strokeDasharray="47 47" strokeDashoffset="-47" />
+                        <div className="rounded-xl p-2 flex flex-col items-center justify-center gap-1.5" style={{ background: "#0d212e" }}>
+                          <div className="relative w-10 h-10">
+                            <svg viewBox="0 0 40 40" className="w-full h-full" style={{ transform: "rotate(-90deg)" }}>
+                              <circle cx="20" cy="20" r="14" fill="none" stroke="#2a3a48" strokeWidth="6" strokeDasharray="88 0" />
+                              <circle cx="20" cy="20" r="14" fill="none" stroke="#d4af37" strokeWidth="6" strokeDasharray="28 60" />
+                              <circle cx="20" cy="20" r="14" fill="none" stroke="#00c2cb" strokeWidth="6" strokeDasharray="18 70" strokeDashoffset="-28" />
+                              <circle cx="20" cy="20" r="14" fill="none" stroke="#38b000" strokeWidth="6" strokeDasharray="27 61" strokeDashoffset="-46" />
                             </svg>
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <span className="text-[7px] font-bold text-white">72%</span>
+                            <div className="absolute inset-0 flex flex-col items-center justify-center">
+                              <span className="text-[8px] font-bold text-white leading-none">72%</span>
+                              <span className="text-[6px] text-gray-400 leading-none mt-0.5">Completion</span>
                             </div>
                           </div>
-                          <span className="text-[7px] text-gray-400">Completion</span>
                         </div>
                       </div>
 
-                      {/* Table rows */}
-                      <div className="space-y-1">
+                      {/* Bottom grid — 2x3 cyan progress bars */}
+                      <div className="grid grid-cols-2 gap-x-3 gap-y-2">
                         {[
-                          { label: "Cases Reviewed", pct: 80, color: "#c8972a" },
-                          { label: "Donors Active", pct: 65, color: "#00A651" },
-                          { label: "Reports Generated", pct: 90, color: "#c8972a" },
-                          { label: "NGOs Onboarded", pct: 50, color: "#00A651" },
+                          { label: "Cases Reviewed", pct: 80 },
+                          { label: "Donors Active", pct: 65 },
+                          { label: "Reports Generated", pct: 90 },
+                          { label: "Donors Active", pct: 65 },
+                          { label: "Reports Generated", pct: 90 },
+                          { label: "NGOs Onboarded", pct: 50 },
                         ].map((row, i) => (
-                          <div key={i} className="flex items-center gap-2">
-                            <div className="w-2.5 h-2.5 rounded-full bg-brand-navy/15" />
-                            <div className="flex-1 h-2 bg-gray-100 rounded-sm overflow-hidden">
+                          <div key={i} className="space-y-1">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[8px] text-gray-400">{row.label}</span>
+                              <span className="text-[8px] font-medium text-gray-400">{row.pct}%</span>
+                            </div>
+                            <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "#162a38" }}>
                               <div
-                                className="h-full rounded-sm transition-all"
+                                className="h-full rounded-full"
                                 style={{
                                   width: `${row.pct}%`,
-                                  backgroundColor: row.color,
+                                  background: "#00a8cc",
                                 }}
                               />
                             </div>
-                            <span className="text-[8px] font-medium text-gray-400 w-6 text-right">{row.pct}%</span>
                           </div>
                         ))}
                       </div>
@@ -231,24 +224,25 @@ export default function LandingPage() {
                   </div>
                 </div>
 
-                {/* 3D Floating Phone Mockup */}
-                <div className="absolute -bottom-6 -right-4 sm:-right-8 z-20 hidden sm:block">
+                {/* Floating Phone Mockup — Tech Neon */}
+                <div className="absolute -bottom-8 -right-4 sm:-right-8 z-20 hidden sm:block">
                   <div
-                    className="bg-white rounded-[20px] w-32 sm:w-36 p-[3px] relative"
+                    className="rounded-[22px] w-32 sm:w-36 p-[3px] relative"
                     style={{
-                      boxShadow: "0 20px 50px -12px rgba(12, 49, 64, 0.35), 0 0 0 2.5px #c8972a, 0 0 0 5px rgba(200, 150, 42, 0.15)",
+                      background: "#0d212e",
+                      boxShadow: "0 20px 50px -12px rgba(0,0,0,0.6), 0 0 0 2px rgba(212,175,55,0.4), 0 0 20px rgba(212,175,55,0.15)",
                       transform: "rotate(-3deg) translateY(-4px)",
                     }}
                   >
                     {/* Screen */}
-                    <div className="bg-white rounded-[17px] overflow-hidden">
+                    <div className="rounded-[19px] overflow-hidden" style={{ background: "#0a1a24" }}>
                       {/* Status bar */}
-                      <div className="bg-white px-3 py-1.5 flex items-center justify-between">
-                        <div className="h-1 w-12 bg-brand-navy rounded-sm" />
+                      <div className="px-3 py-1.5 flex items-center justify-between">
+                        <div className="h-1 w-12 rounded-sm" style={{ background: "#d4af37", opacity: 0.6 }} />
                         <div className="flex items-center gap-1">
-                          <div className="w-1.5 h-1.5 rounded-full bg-brand-green" />
-                          <div className="w-1 h-1 rounded-full bg-gray-300" />
-                          <div className="w-1 h-1 rounded-full bg-gray-300" />
+                          <div className="w-1.5 h-1.5 rounded-full" style={{ background: "#38b000" }} />
+                          <div className="w-1 h-1 rounded-full" style={{ background: "#2a3a48" }} />
+                          <div className="w-1 h-1 rounded-full" style={{ background: "#2a3a48" }} />
                         </div>
                       </div>
 
@@ -256,29 +250,29 @@ export default function LandingPage() {
                       <div className="px-2.5 pb-2.5 space-y-2">
                         {/* Title row */}
                         <div className="flex items-center gap-1.5">
-                          <div className="w-1.5 h-1.5 rounded-full bg-brand-gold" />
-                          <div className="h-1.5 w-14 bg-gray-200 rounded-sm" />
+                          <div className="w-1.5 h-1.5 rounded-full" style={{ background: "#d4af37" }} />
+                          <div className="h-1.5 w-14 rounded-sm" style={{ background: "#162a38" }} />
                         </div>
 
                         {/* Charts row */}
                         <div className="grid grid-cols-7 gap-1">
                           {/* Donut chart */}
-                          <div className="col-span-3 bg-brand-navy rounded-lg p-1.5 flex flex-col items-center gap-1">
-                            {/* Donut */}
+                          <div className="col-span-3 rounded-lg p-1.5 flex flex-col items-center gap-1" style={{ background: "#0d212e" }}>
                             <div className="relative w-7 h-7">
-                              <svg viewBox="0 0 32 32" className="w-full h-full -rotate-90">
-                                <circle cx="16" cy="16" r="12" fill="none" stroke="#c8972a" strokeWidth="7" strokeDasharray="18 57" />
-                                <circle cx="16" cy="16" r="12" fill="none" stroke="#00bfff" strokeWidth="7" strokeDasharray="12 63" strokeDashoffset="-18" />
-                                <circle cx="16" cy="16" r="12" fill="none" stroke="#98E2A7" strokeWidth="7" strokeDasharray="25 50" strokeDashoffset="-30" />
+                              <svg viewBox="0 0 32 32" className="w-full h-full" style={{ transform: "rotate(-90deg)" }}>
+                                <circle cx="16" cy="16" r="11" fill="none" stroke="#2a3a48" strokeWidth="7" strokeDasharray="69 0" />
+                                <circle cx="16" cy="16" r="11" fill="none" stroke="#d4af37" strokeWidth="7" strokeDasharray="20 49" />
+                                <circle cx="16" cy="16" r="11" fill="none" stroke="#00c2cb" strokeWidth="7" strokeDasharray="14 55" strokeDashoffset="-20" />
+                                <circle cx="16" cy="16" r="11" fill="none" stroke="#38b000" strokeWidth="7" strokeDasharray="20 49" strokeDashoffset="-34" />
                               </svg>
                               <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="w-1.5 h-1.5 rounded-full bg-brand-gold" />
+                                <div className="w-1.5 h-1.5 rounded-full" style={{ background: "#d4af37" }} />
                               </div>
                             </div>
                           </div>
 
                           {/* Bar chart */}
-                          <div className="col-span-4 bg-gray-50 rounded-lg p-1.5 flex flex-col gap-1">
+                          <div className="col-span-4 rounded-lg p-1.5 flex flex-col gap-1" style={{ background: "#0d212e" }}>
                             <div className="flex items-end gap-[2px] h-7">
                               {[40, 65, 30, 85, 55, 70, 45, 60, 50, 80, 35, 90].map((h, i) => (
                                 <div
@@ -286,7 +280,7 @@ export default function LandingPage() {
                                   className="flex-1 rounded-t-[1px]"
                                   style={{
                                     height: `${h}%`,
-                                    background: i % 3 === 0 ? "#00A651" : i % 3 === 1 ? "#c8972a" : "#e5e7eb",
+                                    background: i % 3 === 0 ? "#00c2cb" : i % 3 === 1 ? "#d4af37" : "#2a3a48",
                                   }}
                                 />
                               ))}
@@ -296,22 +290,22 @@ export default function LandingPage() {
 
                         {/* Text blocks */}
                         <div className="space-y-1">
-                          <div className="h-1 w-full bg-gray-100 rounded-sm" />
-                          <div className="h-1 w-11/12 bg-gray-100 rounded-sm" />
-                          <div className="h-1 w-9/12 bg-gray-100 rounded-sm" />
+                          <div className="h-1 w-full rounded-sm" style={{ background: "#162a38" }} />
+                          <div className="h-1 w-11/12 rounded-sm" style={{ background: "#162a38" }} />
+                          <div className="h-1 w-9/12 rounded-sm" style={{ background: "#162a38" }} />
                         </div>
 
                         {/* Highlight block */}
-                        <div className="bg-brand-green/20 rounded-md h-5" />
+                        <div className="rounded-md h-5" style={{ background: "rgba(56,176,0,0.2)" }} />
 
                         {/* Bottom bar */}
-                        <div className="bg-brand-navy rounded-md h-4" />
+                        <div className="rounded-md h-4" style={{ background: "#0d212e" }} />
                       </div>
                     </div>
 
                     {/* Bottom home indicator */}
                     <div className="flex justify-center pb-1.5 pt-0.5">
-                      <div className="w-8 h-1 bg-gray-300 rounded-full" />
+                      <div className="w-8 h-1 rounded-full" style={{ background: "#2a3a48" }} />
                     </div>
                   </div>
                 </div>
