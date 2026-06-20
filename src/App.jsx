@@ -17,6 +17,7 @@ import ForgotPassword from "@/pages/ForgotPassword";
 import ResetPassword from "@/pages/ResetPassword";
 
 // App pages
+import LandingPage from "@/pages/LandingPage";
 import Dashboard from "@/pages/Dashboard";
 import NGOs from "@/pages/NGOs";
 import NGOPerformance from "@/pages/NGOPerformance";
@@ -61,6 +62,7 @@ const AuthenticatedApp = () => {
 
   return (
     <Routes>
+      <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -68,7 +70,7 @@ const AuthenticatedApp = () => {
 
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
         <Route element={<AppLayout />}>
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/ngos" element={<NGOs />} />
           <Route path="/ngo-performance" element={<NGOPerformance />} />
           <Route path="/beneficiaries" element={<Beneficiaries />} />
