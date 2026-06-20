@@ -75,23 +75,23 @@ export default function LandingPage() {
               backgroundImage: "url('https://media.base44.com/images/public/6a2aca9f283d77c33f77ff49/9a719416b_generated_image.png')",
               backgroundSize: "cover",
               backgroundPosition: "center",
-              backgroundColor: "#0a0f1d",
-            }}
-          >
+              backgroundColor: "#0a0f1d"
+            }}>
+            
             <div className="relative z-10 px-8 sm:px-12 lg:px-16 py-10 lg:py-14">
               <motion.div
                 initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.7 }}
-                className="mb-8"
-              >
+                className="mb-8">
+                
                 {/* Logo + name */}
                 <div className="flex items-center gap-3 mb-7">
                   <img
                     src="https://media.base44.com/images/public/6a2aca9f283d77c33f77ff49/9af41b6fb_logo-.jpg"
                     alt="معين"
-                    className="h-12 w-auto object-contain"
-                  />
+                    className="h-12 w-auto object-contain" />
+                  
                   <div>
                     <p className="font-display font-bold text-white text-lg leading-tight">منصة معين الرقمية</p>
                     <p className="text-[10px] text-brand-gold/60 tracking-widest">MOEEN DIGITAL PLATFORM</p>
@@ -103,8 +103,8 @@ export default function LandingPage() {
                   <span style={{ color: "#c5a059" }}>ذكية</span>
                   {" "}لإدارة العمل الخيري
                 </h1>
-                <p className="text-white/55 text-sm sm:text-base leading-relaxed max-w-md">
-                  منصة مصممة بتقنيات ذكية لتربط المستفيدين بالمتبرعين من خلال بيانات آمنية، تحليلات فورية، وأثر قابل للقياس
+                <p className="text-white/55 text-sm sm:text-base leading-relaxed max-w-md">منصة مصممة بتقنيات ذكية لتربط المستفيدين بالمتبرعين من خلال بيانات آمنة، تحليلات فورية، وأثر قابل للقياس
+
                 </p>
               </motion.div>
 
@@ -113,46 +113,46 @@ export default function LandingPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.25 }}
-                className="relative space-y-5"
-              >
+                className="relative space-y-5">
+                
                 {/* Gold connecting line */}
                 <div
                   className="absolute top-1 bottom-1 w-[1px] hidden sm:block"
                   style={{
                     right: "28px",
                     background: "linear-gradient(180deg, rgba(197,160,89,0.4), #c5a059 15%, #c5a059 85%, rgba(197,160,89,0.4))",
-                    boxShadow: "0 0 6px rgba(197,160,89,0.3)",
-                  }}
-                />
+                    boxShadow: "0 0 6px rgba(197,160,89,0.3)"
+                  }} />
+                
 
-                {valuePillars.map((p, i) => (
-                  <motion.div
-                    key={p.en}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: 0.35 + i * 0.15 }}
-                    className="relative flex items-start gap-4 group"
-                  >
+                {valuePillars.map((p, i) =>
+                <motion.div
+                  key={p.en}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.35 + i * 0.15 }}
+                  className="relative flex items-start gap-4 group">
+                  
                     {/* Timeline node — gold dot on the line */}
                     <div className="hidden sm:flex shrink-0 items-center justify-center relative z-10" style={{ width: 56 }}>
                       <div
-                        className="w-4 h-4 rounded-full"
-                        style={{
-                          background: "#c5a059",
-                          boxShadow: "0 0 12px rgba(197,160,89,0.5), 0 0 24px rgba(197,160,89,0.2)",
-                        }}
-                      />
+                      className="w-4 h-4 rounded-full"
+                      style={{
+                        background: "#c5a059",
+                        boxShadow: "0 0 12px rgba(197,160,89,0.5), 0 0 24px rgba(197,160,89,0.2)"
+                      }} />
+                    
                     </div>
 
                     {/* Card */}
                     <div
-                      className="flex-1 rounded-2xl p-4 sm:p-5 transition-all group-hover:border-brand-gold/40"
-                      style={{
-                        background: "rgba(30,37,56,0.7)",
-                        border: "1px solid rgba(197,160,89,0.15)",
-                        backdropFilter: "blur(12px)",
-                      }}
-                    >
+                    className="flex-1 rounded-2xl p-4 sm:p-5 transition-all group-hover:border-brand-gold/40"
+                    style={{
+                      background: "rgba(30,37,56,0.7)",
+                      border: "1px solid rgba(197,160,89,0.15)",
+                      backdropFilter: "blur(12px)"
+                    }}>
+                    
                       <div className="flex items-start gap-4">
                         {/* Text */}
                         <div className="flex-1 text-right">
@@ -162,9 +162,9 @@ export default function LandingPage() {
 
                         {/* Icon — right side within card */}
                         <div
-                          className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                          style={{ background: "rgba(197,160,89,0.1)" }}
-                        >
+                        className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                        style={{ background: "rgba(197,160,89,0.1)" }}>
+                        
                           <p.icon className="w-5 h-5" style={{ color: "#c5a059" }} />
                         </div>
                       </div>
@@ -172,11 +172,11 @@ export default function LandingPage() {
 
                     {/* Mobile gold dot (between icon and line, on right) */}
                     <div className="sm:hidden absolute top-0 right-0 w-3 h-3 rounded-full" style={{
-                      background: "#c5a059",
-                      boxShadow: "0 0 8px rgba(197,160,89,0.4)",
-                    }} />
+                    background: "#c5a059",
+                    boxShadow: "0 0 8px rgba(197,160,89,0.4)"
+                  }} />
                   </motion.div>
-                ))}
+                )}
               </motion.div>
 
               {/* Trust badge strip */}
@@ -184,8 +184,8 @@ export default function LandingPage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.7, delay: 0.5 }}
-                className="mt-8 flex items-center gap-3 flex-wrap"
-              >
+                className="mt-8 flex items-center gap-3 flex-wrap">
+                
                 <TrustBadges />
               </motion.div>
             </div>
