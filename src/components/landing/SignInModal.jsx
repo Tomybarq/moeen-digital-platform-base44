@@ -43,13 +43,39 @@ export default function SignInModal({ open, onClose }) {
             <X className="w-4 h-4" />
           </button>
 
-          {/* Header */}
-          <div className="bg-brand-navy px-6 pt-8 pb-6 text-center">
-            <div className="w-14 h-14 rounded-2xl bg-brand-gold/20 flex items-center justify-center mx-auto mb-4">
-              <Lock className="w-6 h-6 text-brand-gold" />
+          {/* Header — Diamond Pattern Luxe */}
+          <div className="overflow-hidden">
+            {/* Patterned upper section with outset/tabbed look */}
+            <div
+              className="mx-4 mt-4 py-8 rounded-2xl text-center relative overflow-hidden"
+              style={{
+                backgroundImage: "url('https://media.base44.com/images/public/6a2aca9f283d77c33f77ff49/54f351e30_generated_image.png')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            >
+              {/* Subtle dark overlay for contrast */}
+              <div className="absolute inset-0 bg-[#072b38]/30" />
+              {/* Lock icon with glassmorphism */}
+              <div
+                className="relative z-10 w-14 h-14 rounded-2xl mx-auto flex items-center justify-center"
+                style={{
+                  background: "rgba(255,255,255,0.08)",
+                  backdropFilter: "blur(8px)",
+                  WebkitBackdropFilter: "blur(8px)",
+                  border: "1.5px solid rgba(212,175,55,0.35)",
+                  boxShadow: "0 0 24px rgba(212,175,55,0.15)",
+                }}
+              >
+                <Lock className="w-6 h-6" style={{ color: "#d4af37" }} />
+              </div>
             </div>
-            <h2 className="text-lg font-bold text-white mb-1">مرحباً بك</h2>
-            <p className="text-sm text-white/60">قم بتسجيل الدخول للمنصة</p>
+
+            {/* Solid lower section with text */}
+            <div className="bg-brand-navy px-6 pt-4 pb-6 text-center">
+              <h2 className="text-lg font-bold text-white mb-1">مرحباً بك</h2>
+              <p className="text-sm" style={{ color: "#a5b4bc" }}>قم بتسجيل الدخول للمنصة</p>
+            </div>
           </div>
 
           {/* Form */}
