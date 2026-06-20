@@ -12,7 +12,7 @@ export default function FloatingControls() {
     localStorage.setItem("moeen-lang", lang);
   }, [lang]);
 
-  const toggleLang = () => setLang((prev) => (prev === "ar" ? "en" : "ar"));
+  const toggleLang = () => setLang((prev) => prev === "ar" ? "en" : "ar");
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3" dir="ltr">
@@ -21,17 +21,17 @@ export default function FloatingControls() {
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
         onClick={toggleTheme}
-        className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-colors"
+        className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-colors hidden"
         style={{
           background: theme === "dark" ? "#1E293B" : "#ffffff",
           border: theme === "dark" ? "1.5px solid #C5A059" : "1.5px solid #e2e8f0",
           color: theme === "dark" ? "#C5A059" : "#1E293B",
-          boxShadow: theme === "dark"
-            ? "0 4px 20px rgba(197,160,89,0.2)"
-            : "0 4px 20px rgba(0,0,0,0.08)",
+          boxShadow: theme === "dark" ?
+          "0 4px 20px rgba(197,160,89,0.2)" :
+          "0 4px 20px rgba(0,0,0,0.08)"
         }}
-        aria-label="Toggle dark mode"
-      >
+        aria-label="Toggle dark mode">
+        
         {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
       </motion.button>
 
@@ -40,17 +40,17 @@ export default function FloatingControls() {
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
         onClick={toggleLang}
-        className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-colors"
+        className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-colors hidden"
         style={{
           background: theme === "dark" ? "#1E293B" : "#ffffff",
           border: theme === "dark" ? "1.5px solid #C5A059" : "1.5px solid #e2e8f0",
           color: theme === "dark" ? "#C5A059" : "#1E293B",
-          boxShadow: theme === "dark"
-            ? "0 4px 20px rgba(197,160,89,0.2)"
-            : "0 4px 20px rgba(0,0,0,0.08)",
+          boxShadow: theme === "dark" ?
+          "0 4px 20px rgba(197,160,89,0.2)" :
+          "0 4px 20px rgba(0,0,0,0.08)"
         }}
-        aria-label="Toggle language"
-      >
+        aria-label="Toggle language">
+        
         <div className="relative flex items-center justify-center">
           <Languages className="w-5 h-5" />
           <span className="absolute -bottom-1 text-[8px] font-extrabold leading-none" style={{ color: "inherit" }}>
@@ -58,6 +58,6 @@ export default function FloatingControls() {
           </span>
         </div>
       </motion.button>
-    </div>
-  );
+    </div>);
+
 }
